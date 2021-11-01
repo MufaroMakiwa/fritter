@@ -36,10 +36,11 @@
           @click.native="renderPage('Notifications')" />
 
         <button @click.stop="isCreateFreetDialogOpen= true">Create Freet</button>
-        <transition name="fade">
-          <CreateFreetDialog v-if="isCreateFreetDialogOpen"/>
-        </transition>
+        
+        <CreateFreetDialog v-model="isCreateFreetDialogOpen"/>
 
+        <ConfirmDialog />
+        
         <transition name="fade">
           <ProfileMenu v-if="displayMenu" class="menu" :username="username"/>
         </transition>
@@ -51,6 +52,7 @@
 <script>
 import NotificationIcon from './NotificationIcon';
 import CreateFreetDialog from './CreateFreetDialog';
+import ConfirmDialog from './ConfirmDialog';
 import { delete_ } from '../utils/crud-helpers';
 import { eventBus } from '../main';
 import ProfileMenu from './ProfileMenu';
@@ -87,7 +89,7 @@ export default {
   },
 
   components: {
-    NotificationIcon, ProfileMenu, CreateFreetDialog
+    NotificationIcon, ProfileMenu, CreateFreetDialog, ConfirmDialog
   },
 
   methods: {
@@ -173,24 +175,18 @@ export default {
     hideMenu() {
       this.displayMenu = false;
     },
-
-    dialogListener() {
-      this.isCreateFreetDialogOpen = false;
-    }
   },
 
   created() {
     eventBus.$on('navigate-to-profile', this.goToProfile);
     eventBus.$on('logout-menu-selected', this.signOut);
     eventBus.$on('navigate-to-settings', this.goToSettings);
-    eventBus.$on('close-freet-dialog', this.dialogListener);
   },
 
   beforeDestroy() {
     eventBus.$off('navigate-to-profile', this.goToProfile);
     eventBus.$off('logout-menu-selected', this.signOut);
     eventBus.$off('navigate-to-settings', this.goToSettings);
-    eventBus.$off('close-freet-dialog', this.dialogListener);
   }
 }
 </script>

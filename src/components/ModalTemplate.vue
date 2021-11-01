@@ -1,47 +1,55 @@
 <template>
-  <div 
-    class="modal"
-    @wheel.prevent 
-    @scroll.prevent 
-    @touchmove.prevent
-    @click="clickToDismiss ? closeModal : animateClick">
+  <transition name="fade">
+    <div 
+      class="modal"
+      v-if="display"
+      @wheel.prevent 
+      @scroll.prevent 
+      @touchmove.prevent
+      @click="modalClick">
 
-    <!-- @click.prevent is to avoid calling the click function on parent div-->
-    <div
-      :class="['dialog-container', containerStyle, 'card', animateModalClick ? 'scale' : '']"
-      @click.prevent> 
-      <slot></slot>
+      <!-- @click.stop is to avoid calling the click function on parent div-->
+      <div
+        :class="['dialog-container', 'card', animateModalClick ? 'scale' : '']"
+        :style="containerStyle"
+        @click.stop> 
+
+        <slot></slot>
+
+      </div>
     </div>
-  </div>
+  </transition>
+  
 </template>
 
 <script>
+
 export default {
   name: "ModalTemplate",
 
   props: {
     clickToDismiss: {
       default: false,
+      type: Boolean,
     },
     
     maxWidth: {
-      default: 550,
+      default: 500,
       type: Number,
     },
 
-    value: Boolean,
+    display: {
+      default: false,
+      type: Boolean
+    }
   },
 
   data() {
     return {
-      animateModalClick: false
-    }
-  },
+      animateModalClick: false,
 
-  computed: {
-    containerStyle() {
-      return {
-        maxWidth: `${this.maxWidth}px`
+      containerStyle: {
+        "max-width": `${this.maxWidth}px`
       }
     }
   },
@@ -55,7 +63,11 @@ export default {
     },
 
     closeModal() {
-      this.$emit('input', false)
+      this.$emit('dismiss-modal')
+    },
+
+    modalClick() {
+      return this.clickToDismiss ? this.closeModal() : this.animateClick();
     }
   }
 }
@@ -63,16 +75,16 @@ export default {
 
 <style scoped>
 .modal {
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: 100;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 100;
 }
 
 .dialog-container {

@@ -29,14 +29,20 @@
           :disabled="!canUpdate" 
           @click="handleUpdate">Update freet</button>
 
-        <button v-if="editingFreet" @click="stopEditing">Cancel</button>
+        <button 
+          v-if="editingFreet" 
+          class="cancel"
+          @click="stopEditing">Cancel</button>
       </div>
     </section>
+
+    <ConfirmDialog ref="confirm"/>
   </div>
 </template>
 
 <script>
 import FreetIcon from './FreetIcon';
+import ConfirmDialog from './ConfirmDialog';
 import { post, patch } from '../utils/crud-helpers';
 import { eventBus } from '../main';
 
@@ -45,7 +51,7 @@ export default {
   name: "CreateFreet",
 
   components: {
-    FreetIcon
+    FreetIcon, ConfirmDialog
   },
 
   data() {
@@ -132,7 +138,7 @@ export default {
 
             // if creating a freet from a dialog, update parent to
             // close the dialog
-            this.isDialog && eventBus.$emit("close-freet-dialog");    
+            this.isDialog && this.$emit("dismiss-modal");    
             
           } else {
             this.content.error = response.data.error;
@@ -140,14 +146,22 @@ export default {
         });
     },
 
-    handleUpdate() {
+    async handleUpdate() {
       if (!this.canUpdate) {
         return;
       }
-
-      if (!confirm("Are you sure you want to edit this freet?\n This will remove all its likes and refreets.")) {
+      if (!await this.$refs.confirm.open(
+        "Update Freet?",
+        "This can’t be undone and will remove all this freet's likes and refreets.",
+        "Update"
+      )) {
+        eventBus.$emit('stop-editing-freet');
         return;
       }
+
+      // if (!confirm("Are you sure you want to edit this freet?\n This will remove all its likes and refreets.")) {
+      //   return;
+      // }
 
       patch(`/api/freets/${this.freetId}`, { content: this.content.value.trim() })
         .then((response) => {

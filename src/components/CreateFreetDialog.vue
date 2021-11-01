@@ -1,35 +1,34 @@
 <template>
-  <div 
-    class="modal" 
-    @wheel.prevent 
-    @scroll.prevent 
-    @touchmove.prevent
-    @click="animateClick">
-    <div 
-      :class="['dialog-container', animateModalClick ? 'scale' : '', 'card' ]"
-      @click.stop.prevent>
-      <div class="header-container">
-        <span class="dialog-title">Compose</span>
-
-        <div class="close-button" @click="closeDialog">
-          <font-awesome-icon icon="times" class="icon close"/>
-        </div>
+  <ModalTemplate
+    :clickToDismiss="false"
+    :maxWidth="550"
+    :display="value"
+    @dismiss-modal="closeDialog">
+    
+    <div class="header-container">
+      <span class="dialog-title">Create Freet</span>
+      <div class="close-button" @click="closeDialog">
+        <font-awesome-icon icon="times" class="icon close"/>
       </div>
-
-      <CreateFreet :isDialog="true"/>
     </div>
-  </div> 
+
+    <CreateFreet :isDialog="true" @dismiss-modal="closeDialog"/>
+  </ModalTemplate>
 </template>
 
 <script>
-import { eventBus } from '../main';
-import CreateFreet from './CreateFreet.vue';
+import CreateFreet from './CreateFreet';
+import ModalTemplate from './ModalTemplate';
 
 export default {
   name: "CreateFreetDialog",
 
   components: {
-    CreateFreet
+    CreateFreet, ModalTemplate
+  },
+
+  props: {
+    value: Boolean
   },
 
   data() {
@@ -40,7 +39,7 @@ export default {
 
   methods: {
     closeDialog() {
-      eventBus.$emit('close-freet-dialog');
+      this.$emit('input', false);
     },
 
     animateClick() {
@@ -48,38 +47,16 @@ export default {
       setTimeout(() => {
         this.animateModalClick = false;
       }, 100);
+    },
+
+    test() {
+      console.log("Modal click");
     }
   }
 }
 </script>
 
 <style scoped>
-.modal {
-  background-color: rgba(0, 0, 0, 0.4);
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 100;
-}
-
-.dialog-container {
-  max-width: 550px;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.3s;
-  z-index: 10;
-}
-
-.dialog-container.scale {
-  transform: scale(1.025);
-}
-
 .header-container {
   display: flex;
   flex-direction: row;
@@ -93,7 +70,6 @@ export default {
 .dialog-title {
   flex-grow: 1;
   font-weight: bold;
-  color: gray;
 }
 
 .close-button {

@@ -108,6 +108,7 @@ button.cancel {
 
 button.cancel:hover {
   background-color: lightgray;
+  color: black;
 }
 
 span, p {

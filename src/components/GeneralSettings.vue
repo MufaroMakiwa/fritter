@@ -227,10 +227,6 @@ export default {
   color: var(--theme-color);
 }
 
-.update-link.alert {
-  color: red;
-}
-
 .update-link:hover {
   text-decoration: underline;
   cursor: pointer;

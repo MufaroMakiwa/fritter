@@ -1,0 +1,112 @@
+<template>
+  <ModalTemplate
+    :clickToDismiss="false"
+    :maxWidth="400"
+    :display="dialog">
+    <div class="confirm-container">
+      <h3>{{ title }}</h3>
+
+      <!-- <span>
+        This can’t be undone and the freet will be removed from your profile and 
+        the timeline of any users that follow you.
+      </span> -->
+      <span>{{ summary }}</span>
+
+      <div class="buttons-container">
+        <button class="action" @click="agree">{{ actionButtonLabel }}</button>
+        <button class="cancel" @click="cancel">Cancel</button>
+      </div>
+    </div>
+  </ModalTemplate>
+</template>
+
+<script>
+import ModalTemplate from './ModalTemplate';
+
+// https://techformist.com/reusable-confirmation-dialog-vuetify/
+export default {
+  name: "ConfirmDialog",
+
+  components: {
+    ModalTemplate
+  },
+
+  data() {
+    return {
+      dialog: false,
+      resolve: null,
+      reject: null,
+      title: "",
+      summary: "",
+      actionButtonLabel: ""
+    }
+  },
+
+  methods: {
+    cancel() {
+      this.resolve(false);
+      this.dialog = false;
+    },
+
+    agree() {
+      this.resolve(true);
+      this.dialog = false;
+    },
+
+    open(title, summary, actionButtonLabel) {
+      this.dialog = true;
+      this.title = title;
+      this.summary = summary;
+      this.actionButtonLabel = actionButtonLabel;
+      return new Promise((resolve, reject) => {
+          this.resolve = resolve;
+          this.reject = reject;
+        });
+    }
+  }
+}
+</script>
+
+<style scoped>
+.confirm-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 1.5rem;
+}
+
+.confirm-container h3 {
+  padding: 0;
+  margin: 0;
+}
+
+.confirm-container span {
+  color: gray;
+  width: 100%;
+  margin-top: 1.5rem;
+  word-break: normal;
+}
+
+.buttons-container {
+  display: grid;
+  margin-top: 1.5rem;
+  grid-gap: 1.5rem;
+  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+}
+
+.buttons-container button {
+  margin: 0;
+}
+
+.buttons-container button.action {
+  background-color: red;
+  color: white;
+} 
+
+.buttons-container button.action:hover {
+  background-color: firebrick;
+}
+</style>
