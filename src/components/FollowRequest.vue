@@ -15,11 +15,14 @@
         <span class="decline-button" @click="decline">Decline</span>
       </div>
     </div>
+
+    <ConfirmDialog ref="confirm"/>
   </div>
 </template>
 
 <script>
 import { delete_, patch } from '../utils/crud-helpers';
+import ConfirmDialog from './ConfirmDialog';
 
 
 export default {
@@ -27,6 +30,10 @@ export default {
 
   props: {
     request: Object,
+  },
+
+  components: {
+    ConfirmDialog
   },
 
   methods: {
@@ -49,11 +56,15 @@ export default {
         })
     },
 
-    decline() {
-      if (!confirm("Are you sure you want to decline this follow request")) {
+    async decline() {
+      if (!await this.$refs.confirm.open(
+        "Decline this request?",
+        `${this.request.username} will be not be added to your followers and will not be notified by Fritter.`,
+        "Decline"
+      )) {
         return;
       }
- 
+
       const options = { isPendingRequest: true };
       delete_(`/api/user/followers/${this.request.username}`, options)
         .then(response => {

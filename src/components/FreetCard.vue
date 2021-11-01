@@ -70,6 +70,8 @@
         </div>        
       </section>
     </div>
+
+    <ConfirmDialog ref="confirm"/>
   </div>
 </template>
 
@@ -77,6 +79,7 @@
 import FreetIcon from './FreetIcon';
 import { delete_, post } from '../utils/crud-helpers';
 import { formattedDateTime } from '../utils/utilities';
+import ConfirmDialog from './ConfirmDialog';
 import { eventBus } from '../main';
 import CreateFreet from './CreateFreet';
 
@@ -95,7 +98,7 @@ export default {
   },
 
   components: {
-    FreetIcon, CreateFreet
+    FreetIcon, CreateFreet, ConfirmDialog
   },
 
   computed: {
@@ -192,9 +195,11 @@ export default {
       this.editingFreet = false;
     },
 
-    deleteFreet() {
-      if (confirm(
-        "This action cannot be undone and the freet will be removed from your account.",
+    async deleteFreet() {
+       if (await this.$refs.confirm.open(
+        "Delete Freet?",
+        "This can’t be undone and the freet will be removed from your profile and the timeline of any users that follow you.",
+        "Delete"
       )) {
         delete_(`/api/freets/${this.freet.freetId}`)
           .then(response => {

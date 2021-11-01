@@ -17,7 +17,7 @@
 
       <div class="option" @click="logout">
         <font-awesome-icon icon="sign-out-alt" class="icon option-icon"/>
-        <span class="option-title">Logout</span>
+        <span class="option-title">Log out</span>
       </div>
     </section>
   </div>

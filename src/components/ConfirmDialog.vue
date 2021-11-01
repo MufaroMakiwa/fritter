@@ -6,14 +6,12 @@
     <div class="confirm-container">
       <h3>{{ title }}</h3>
 
-      <!-- <span>
-        This can’t be undone and the freet will be removed from your profile and 
-        the timeline of any users that follow you.
-      </span> -->
       <span>{{ summary }}</span>
 
       <div class="buttons-container">
-        <button class="action" @click="agree">{{ actionButtonLabel }}</button>
+        <button 
+          :class="[isWarning ? 'action' : '']" 
+          @click="agree">{{ actionButtonLabel }}</button>
         <button class="cancel" @click="cancel">Cancel</button>
       </div>
     </div>
@@ -38,7 +36,8 @@ export default {
       reject: null,
       title: "",
       summary: "",
-      actionButtonLabel: ""
+      actionButtonLabel: "",
+      isWarning: true
     }
   },
 
@@ -53,10 +52,11 @@ export default {
       this.dialog = false;
     },
 
-    open(title, summary, actionButtonLabel) {
+    open(title, summary, actionButtonLabel, isWarning = true) {
       this.dialog = true;
       this.title = title;
       this.summary = summary;
+      this.isWarning = isWarning;
       this.actionButtonLabel = actionButtonLabel;
       return new Promise((resolve, reject) => {
           this.resolve = resolve;
@@ -99,6 +99,9 @@ export default {
 
 .buttons-container button {
   margin: 0;
+  height: 40px;
+  border-radius: 20px;
+  outline: none;
 }
 
 .buttons-container button.action {

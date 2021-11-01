@@ -38,12 +38,12 @@
         <button @click.stop="isCreateFreetDialogOpen= true">Create Freet</button>
         
         <CreateFreetDialog v-model="isCreateFreetDialogOpen"/>
-
-        <ConfirmDialog />
         
         <transition name="fade">
           <ProfileMenu v-if="displayMenu" class="menu" :username="username"/>
         </transition>
+
+        <ConfirmDialog ref="confirm"/>
       </div>
     </nav>
   </div> 
@@ -98,7 +98,16 @@ export default {
       return currentAuthor !== undefined && author === currentAuthor;
     },
 
-    signOut() {
+    async signOut() {
+      if (!await this.$refs.confirm.open(
+        "Log out of Fritter?",
+        "This will take you to the sign in page. You can always log in anytime.",
+        "Log out",
+        false
+      )) {
+        return;
+      }
+
       delete_('/api/user/session')
         .then(response => {
           if (response.isSuccess) {

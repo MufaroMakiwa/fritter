@@ -1,15 +1,20 @@
 <template>
-  <button 
-    :class="['profile-header-button', 'follow-button', followButton.cssClass ]" 
-    :data-hover="followButton.hoverText"
-    :data-text="followButton.text"
-    @click.stop="handleFollow">
-  </button>
+  <div>
+    <button 
+      :class="['profile-header-button', 'follow-button', followButton.cssClass ]" 
+      :data-hover="followButton.hoverText"
+      :data-text="followButton.text"
+      @click.stop="handleFollow">
+    </button>
+
+    <ConfirmDialog ref="confirm"/>
+  </div>
 </template>
 
 <script>
 import { eventBus } from '../main';
 import { post, delete_ } from '../utils/crud-helpers';
+import ConfirmDialog from './ConfirmDialog';
 
 export default {
   name: "FollowButton",
@@ -17,6 +22,10 @@ export default {
   props: {
     followingStatus: String,
     username: String,
+  },
+
+  components: {
+    ConfirmDialog
   },
 
   computed: {
@@ -88,18 +97,20 @@ export default {
         })
     },
 
-    handleFollow() {
+    async handleFollow() {
       switch(this.followingStatus) {
         case "ACTIVE":
-          if (confirm(`Are you sure you no longer want to follow ${this.username}? You will not be able to see their activity on your feed.`)) {
+          if (await this.$refs.confirm.open(
+            `Unfollow ${this.username}?`,
+            "You will not be able to see their activity on your feed. You can still view their profile unless they have a private account.",
+            "Unfollow"
+          )) {
             this.removeFollow(false);
           }         
           break;
 
-        case "PENDING":
-          if (confirm(`Are you sure you want to cancel your follow request to ${this.username}`)) {
-            this.removeFollow(true);
-          }
+        case "PENDING":    
+          this.removeFollow(true);
           break;
 
         case "NONE":

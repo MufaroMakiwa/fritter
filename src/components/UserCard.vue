@@ -20,6 +20,8 @@
       @click.stop="removeFollower">
       Remove
     </button>
+
+    <ConfirmDialog ref="confirm"/>
   </div>
 </template>
 
@@ -28,7 +30,7 @@ import FollowButton from './FollowButton';
 import { eventBus } from '../main';
 import { formattedDate } from '../utils/utilities';
 import { delete_ } from '../utils/crud-helpers';
-
+import ConfirmDialog from './ConfirmDialog';
 
 export default {
   name: "UserCard",
@@ -43,7 +45,7 @@ export default {
   },
 
   components: {
-    FollowButton
+    FollowButton, ConfirmDialog
   },
   
   computed: {
@@ -66,8 +68,12 @@ export default {
       eventBus.$emit("navigate-to-profile", this.user.username);
     },
 
-    removeFollower() {
-      if (!confirm(`Are you sure you want to do not want ${this.user.username} to follow you`)) {
+    async removeFollower() {
+      if (!await this.$refs.confirm.open(
+        "Remove this follower?",
+        `${this.user.username} will be removed from your followers and will not be notified by Fritter.`,
+        "Remove"
+      )) {
         return;
       }
 

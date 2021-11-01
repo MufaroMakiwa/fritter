@@ -6,7 +6,7 @@
       @wheel.prevent 
       @scroll.prevent 
       @touchmove.prevent
-      @click="modalClick">
+      @click.stop="modalClick">
 
       <!-- @click.stop is to avoid calling the click function on parent div-->
       <div

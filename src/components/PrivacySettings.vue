@@ -4,15 +4,11 @@
       <span class="section-title">Account activity</span>
 
       <div class="section-controls">
-        <label class="toggle-container" for="toggle">
-          <input 
-            type="checkbox" 
-            class="toggle-input" 
-            id="toggle" 
-            :checked="isPrivateAccount"
-            @change="updatePrivacy($event)"/>
+        <div 
+          :class="['toggle-container', isPrivateAccount ? 'checked' : '']"
+          @click="updatePrivacy">
           <div class="toggle-fill"></div>
-        </label>
+        </div>
 
         <span class="summary">
           Make you account private to only your followers.
@@ -20,7 +16,7 @@
       </div>
 
       <span class="section-note">
-        By making your accout private, only your followers will be able to see your likes,
+        By making your accout private, only your followers will be able to see your likes, refreets,
         the people you follow and the people that follow you. 
       </span>
 
@@ -39,11 +35,14 @@
       </span>
     </div>
 
+    <ConfirmDialog ref="confirm"/>
   </section>
 </template>
 
 <script>
 import { delete_, put } from '../utils/crud-helpers';
+import ConfirmDialog from './ConfirmDialog';
+
 
 export default {
   name: "PrivacySettings",
@@ -54,23 +53,31 @@ export default {
     }
   },
 
-  methods: {
-    deleteAccount() {
-      if (confirm(
-        "Once your account has been deleted, any of your data cannot be recovered.",
-      )) {
-        delete_('/api/user')
-          .then(response => {
-            if (response.isSuccess) {
-              this.$store.dispatch("unauthenticateUser");
-              this.$router.push({name: "Login"}); 
+  components: {
+    ConfirmDialog
+  },
 
-            } else {
-              // no error expected here. The unauthenticated error is caught
-              // in App.vue
-            }
-          });
+  methods: {
+    async deleteAccount() {
+      if (!await this.$refs.confirm.open(
+        "Delete your account?",
+        "This can't be undone and all your information which includes freets, refreets, like, followers and following will be lost",
+        "Delete"
+      )) {
+        return;
       }
+
+      delete_('/api/user')
+        .then(response => {
+          if (response.isSuccess) {
+            this.$store.dispatch("unauthenticateUser");
+            this.$router.push({name: "Login"}); 
+
+          } else {
+            // no error expected here. The unauthenticated error is caught
+            // in App.vue
+          }
+        });
     },
 
     setPrivacy(value) {
@@ -83,14 +90,15 @@ export default {
 
     },
 
-    updatePrivacy(event) {
+    async updatePrivacy() {
       if (this.isPrivateAccount) {
-        if (confirm("By turning off privacy mode, all pending follow requests will be automatically accepted.")) {
+        if (await this.$refs.confirm.open(
+          "Turn off private mode?",
+          "By turning off private mode, all pending follow requests will be automatically accepted.",
+          "Turn off",
+          false
+        )) {
           this.setPrivacy(false);
-          
-        } else {
-          // if user declines keep the checkbox checked
-          event.target.checked = true;
         }
       } else {
         this.setPrivacy(true);
@@ -132,8 +140,10 @@ export default {
 
 .section-note {
   color: gray;
-  font-size: 0.9rem;
   margin-top: 2rem;
+  text-justify: inter-word;
+  text-align: justify;
+  word-break: normal;
 }
 
 .update-link {
@@ -174,10 +184,6 @@ export default {
   margin-right: 2rem;
 }
 
-.toggle-input {
-  display: none;
-}
-
 .toggle-fill {
   position: relative;
   width: var(--outer-width);
@@ -201,11 +207,11 @@ export default {
   transition: transform 0.3s;
 }
 
-.toggle-input:checked ~ .toggle-fill {
+.toggle-container.checked .toggle-fill {
   background-color: var(--theme-color);
 }
 
-.toggle-input:checked ~ .toggle-fill::after {
+.toggle-container.checked .toggle-fill::after {
   transform: translateX(var(--height));
 }
 

@@ -159,10 +159,6 @@ export default {
         return;
       }
 
-      // if (!confirm("Are you sure you want to edit this freet?\n This will remove all its likes and refreets.")) {
-      //   return;
-      // }
-
       patch(`/api/freets/${this.freetId}`, { content: this.content.value.trim() })
         .then((response) => {
           if (response.isSuccess) {
