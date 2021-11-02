@@ -76,10 +76,6 @@ export default {
   cursor: pointer;
 }
 
-.icon {
-  color: gray;
-}
-
 .profile-link .menu-profile-icon {
   font-size: 2.5rem;
 }

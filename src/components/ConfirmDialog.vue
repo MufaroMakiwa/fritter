@@ -1,8 +1,9 @@
 <template>
   <ModalTemplate
-    :clickToDismiss="false"
+    :clickToDismiss="options.clickToDismiss"
     :maxWidth="400"
-    :display="dialog">
+    :display="dialog"
+    @dismiss-modal="cancel">
     <div class="confirm-container">
       <h3>{{ title }}</h3>
 
@@ -10,7 +11,7 @@
 
       <div class="buttons-container">
         <button 
-          :class="[isWarning ? 'action' : '']" 
+          :class="[options.isWarning ? 'action' : '']" 
           @click="agree">{{ actionButtonLabel }}</button>
         <button class="cancel" @click="cancel">Cancel</button>
       </div>
@@ -37,7 +38,10 @@ export default {
       title: "",
       summary: "",
       actionButtonLabel: "",
-      isWarning: true
+      options: {
+        isWarning: true,
+        clickToDismiss: false
+      }
     }
   },
 
@@ -52,12 +56,13 @@ export default {
       this.dialog = false;
     },
 
-    open(title, summary, actionButtonLabel, isWarning = true) {
+    open(title, summary, actionButtonLabel, options = {}) {
       this.dialog = true;
       this.title = title;
       this.summary = summary;
-      this.isWarning = isWarning;
       this.actionButtonLabel = actionButtonLabel;
+      this.options = Object.assign(this.options, options);
+
       return new Promise((resolve, reject) => {
           this.resolve = resolve;
           this.reject = reject;

@@ -409,7 +409,6 @@ export default {
 
 .freet-actions-inner .icon {
   font-size: 1.25rem;
-  color: gray;
   transition: all 0.3s;
 }
 
@@ -492,10 +491,10 @@ export default {
   width: fit-content;
   font-size: 0.8rem;
   background: rgb(206, 206, 206);
-  padding: 2px 4px;
+  padding: 4px;
   border-radius: 4px;
   text-align: center;
-  transition: all 0.1s;
+  transition: all 0.1s 0.2s;
   transform: scale(0);
 }
 

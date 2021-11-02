@@ -30,10 +30,6 @@ export default {
   position: relative;
 }
 
-.icon {
-  color: gray;
-}
-
 .notification-icon-container span {
   white-space:nowrap;
   color: white;

@@ -19,7 +19,8 @@
 
       <div v-else class="nav-profile">
         <div 
-          :class="['user-container', displayMenu ? 'focused' : '']"
+          :class="['user-container', displayMenu ? 'focused' : '', 'tooltip']"
+          data-label="Account"
           tabindex="0"
           @click="toggleMenu($event)"
           @focusout="hideMenu">
@@ -32,8 +33,9 @@
         </div>
 
         <NotificationIcon 
-          :class="['profile-icon', isNotificationPage ? 'selected' : '']"
-          @click.native="renderPage('Notifications')" />
+          :class="['profile-icon', isNotificationPage ? 'selected' : '', 'tooltip']"
+          @click.native="renderPage('Notifications')" 
+          data-label="Notifications"/>
 
         <button @click.stop="isCreateFreetDialogOpen= true">Create Freet</button>
         
@@ -99,11 +101,15 @@ export default {
     },
 
     async signOut() {
+      const dialogOptions = {
+        isWarning: false,
+        clickToDismiss: true
+      }
       if (!await this.$refs.confirm.open(
         "Log out of Fritter?",
         "This will take you to the sign in page. You can always log in anytime.",
         "Log out",
-        false
+        dialogOptions
       )) {
         return;
       }
@@ -228,10 +234,6 @@ nav {
   padding: 0 var(--page-padding);
 }
 
-nav .icon  {
-  color: gray;
-}
-
 nav button {
   height: var(--element-size);
   border-radius: calc(var(--element-size) / 2);
@@ -273,6 +275,22 @@ nav button {
   position: relative;
 }
 
+.tooltip::after {
+  content: attr(data-label);
+  position: absolute;
+  top: 110%;
+  font-size: 0.8rem;
+  background: rgb(206, 206, 206);
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.1s 0.2s;
+  transform: scale(0);
+}
+
+.tooltip:hover::after {
+  transform: scale(1);
+}
+
 .nav-profile .profile-icon {
   font-size: 1.5rem;
   width: var(--element-size);
@@ -299,7 +317,6 @@ nav button {
   height: var(--element-size);
   justify-content: center;
   align-items: center;
-  padding-right: 1rem;
   border-radius: calc(var(--element-size) / 2);
   border: 1px solid whitesmoke;
   transition: all 0.3s;
@@ -310,6 +327,7 @@ nav button {
 .user-container .username {
   margin-left: 0.5rem;
   max-width: 150px;
+  padding-right: 1rem;
 }
 
 .nav-profile .user-container:hover {
@@ -319,6 +337,10 @@ nav button {
 
 .nav-profile .user-container.focused {
   background-color: var(--input-color-hover);
+}
+
+.user-container.focused.tooltip::after {
+  display: none;
 }
 
 .nav-profile .user-container .profile-icon {

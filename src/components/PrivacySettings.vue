@@ -96,7 +96,7 @@ export default {
           "Turn off private mode?",
           "By turning off private mode, all pending follow requests will be automatically accepted.",
           "Turn off",
-          false
+          { isWarning: false }
         )) {
           this.setPrivacy(false);
         }

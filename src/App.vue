@@ -138,4 +138,7 @@ textarea:hover:not(:focus) {
   text-overflow: ellipsis;
 }
 
+.icon {
+  color: gray
+}
 </style>
