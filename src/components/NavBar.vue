@@ -285,6 +285,7 @@ nav button {
   border-radius: 4px;
   transition: all 0.1s 0.2s;
   transform: scale(0);
+  pointer-events: none;
 }
 
 .tooltip:hover::after {

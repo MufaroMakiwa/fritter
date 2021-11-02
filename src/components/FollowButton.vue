@@ -8,6 +8,8 @@
     </button>
 
     <ConfirmDialog ref="confirm"/>
+
+    <AlertDialog ref="alert" />
   </div>
 </template>
 
@@ -15,6 +17,7 @@
 import { eventBus } from '../main';
 import { post, delete_ } from '../utils/crud-helpers';
 import ConfirmDialog from './ConfirmDialog';
+import AlertDialog from './AlertDialog';
 
 export default {
   name: "FollowButton",
@@ -25,7 +28,7 @@ export default {
   },
 
   components: {
-    ConfirmDialog
+    ConfirmDialog, AlertDialog
   },
 
   computed: {

@@ -37,12 +37,15 @@
     </section>
 
     <ConfirmDialog ref="confirm"/>
+
+    <AlertDialog ref="alert" />
   </div>
 </template>
 
 <script>
 import FreetIcon from './FreetIcon';
 import ConfirmDialog from './ConfirmDialog';
+import AlertDialog from './AlertDialog';
 import { post, patch } from '../utils/crud-helpers';
 import { eventBus } from '../main';
 
@@ -51,7 +54,7 @@ export default {
   name: "CreateFreet",
 
   components: {
-    FreetIcon, ConfirmDialog
+    FreetIcon, ConfirmDialog, AlertDialog
   },
 
   data() {
@@ -136,12 +139,11 @@ export default {
             // display toast for success
             eventBus.$emit('display-toast', "You posted a freet");
 
-            // if creating a freet from a dialog, update parent to
-            // close the dialog
+            // if creating a freet from a dialog, update parent to close the dialog
             this.isDialog && this.$emit("dismiss-modal");    
             
           } else {
-            this.content.error = response.data.error;
+            this.handleErrors(response);
           }
         });
     },
@@ -173,15 +175,16 @@ export default {
         });
     },
 
-    handleErrors(response) {
+    async handleErrors(response) {
       // this may happen when a freet in deleted in another session while the
       // user in another current session is trying to modify the same freet
       if (response.data.error.freetNotFound) {
-        alert("The freet you are trying to modify no longer exists.");
+        await this.$refs.alert.open("The freet you are trying to modify no longer exists.");
+        eventBus.$emit('stop-editing-freet');
         eventBus.$emit("update-freets");
         return;
       }
-      // this error like likely due to malformed content which is unlikely
+      // this error is likely due to malformed content which is unlikely
       // to happen because the UI will not allow it
       this.content.error = response.data.error;
     },

@@ -72,6 +72,8 @@
     </div>
 
     <ConfirmDialog ref="confirm"/>
+
+    <AlertDialog ref="alert" />
   </div>
 </template>
 
@@ -80,6 +82,7 @@ import FreetIcon from './FreetIcon';
 import { delete_, post } from '../utils/crud-helpers';
 import { formattedDateTime } from '../utils/utilities';
 import ConfirmDialog from './ConfirmDialog';
+import AlertDialog from './AlertDialog';
 import { eventBus } from '../main';
 import CreateFreet from './CreateFreet';
 
@@ -98,7 +101,7 @@ export default {
   },
 
   components: {
-    FreetIcon, CreateFreet, ConfirmDialog
+    FreetIcon, CreateFreet, ConfirmDialog, AlertDialog
   },
 
   computed: {
@@ -204,34 +207,15 @@ export default {
         delete_(`/api/freets/${this.freet.freetId}`)
           .then(response => {
             if (response.isSuccess) {
-              eventBus.$emit('update-freets');
               eventBus.$emit('display-toast', "You deleted a freet");
 
             } else {
               this.handleDeleteErrors(response);
             }
+            // in both cases update the freets
+            eventBus.$emit('update-freets');
           });
       }
-    },
-
-    handleFreetNotFound(response) {
-      // this may happen when a freet in deleted in another session while the
-      // user in another current session is trying to modify the same freet
-      if (response.data.error.freetNotFound !== undefined) {
-        alert("This freet no longer exists.")
-        eventBus.$emit("update-freets");
-        return true;
-      }
-      return false;
-    },
-
-    handleDeleteErrors(response) {
-      if (this.handleFreetNotFound(response)) {
-        return;
-      }
-      // this error is probably gonna be due to unathorized edit or invalid
-      // freetId. It is unlikely to happen since the UI does not allow it
-      this.freetError = response.data.error;
     },
 
     handleLike() {
@@ -250,24 +234,11 @@ export default {
             eventBus.$emit('display-toast', toastMessage);
 
           } else { 
-            this.handleLikeErrors(response);
+            this.handleLikeErrors(response, toastMessage);
           }
           // in both cases, trigger a refresh
           eventBus.$emit('update-freets');
         })
-    },
-
-    handleLikeErrors(response) {
-      if (this.handleFreetNotFound(response)) {
-        return;
-      }
-      // this will probably happen when a user (un)likes a freet in another
-      // browser and tries to (un)like in a different browser
-      if (response.data.error.likeError) {
-        alert(response.data.error.likeError);
-      }
-
-      // no other like error expected
     },
 
     handleRefreet() {
@@ -286,21 +257,57 @@ export default {
             eventBus.$emit('display-toast', toastMessage);
 
           } else {
-            this.handleRefreetErrors(response);
+            this.handleRefreetErrors(response, toastMessage);
           }
           // in both cases, trigger a refresh
           eventBus.$emit('update-freets');
         })
     },
 
-    handleRefreetErrors(response) {
-      if (this.handleFreetNotFound(response)) {
+    async handleFreetNotFound(response) {
+      // this may happen when a freet in deleted in another session while the
+      // user in another current session is trying to modify the same freet
+      if (response.data.error.freetNotFound !== undefined) {
+        await this.$refs.alert.open("Sorry, this freet has already been deleted.");
+        return true;
+      }
+      return false;
+    },
+
+    async handleDeleteErrors(response) {
+      // if the freet is not found, the user has already deleted it. No need to 
+      // display the deleted alert
+      if (response.data.error.freetNotFound !== undefined) {
+        eventBus.$emit("display-toast", "You deleted a freet")
+        return;
+      }
+      // this error is probably gonna be due to unathorized edit or invalid
+      // freetId. It is unlikely to happen since the UI does not allow it
+      this.freetError = response.data.error;
+    },
+
+    async handleLikeErrors(response, toastMessage) {
+      if (await this.handleFreetNotFound(response)) {
+        return;
+      }
+      // this will probably happen when a user (un)likes a freet in another
+      // browser and tries to (un)like in a different browser. There is no need 
+      // to display an alert since it will simply get this in sync with other sessions
+      if (response.data.error.likeError) {
+        eventBus.$emit('display-toast', toastMessage);
+      }
+
+      // no other like error expected
+    },
+
+    async handleRefreetErrors(response, toastMessage) {
+      if (await this.handleFreetNotFound(response)) {
         return;
       }
       // this will probably happen when a user (un)likes a freet in another
       // browser and tries to (un)like in a different browser
       if (response.data.error.refreetError) {
-        alert(response.data.error.refreetError);
+        eventBus.$emit('display-toast', toastMessage);
       }
 
       // no other refreet error expected.
@@ -496,6 +503,7 @@ export default {
   text-align: center;
   transition: all 0.1s 0.2s;
   transform: scale(0);
+  pointer-events: none;
 }
 
 .icon-container:hover::after {
