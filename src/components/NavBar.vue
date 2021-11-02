@@ -260,7 +260,7 @@ nav button {
   height: var(--element-size);
   max-width: 400px;
   flex-grow: 1;
-  background-color: whitesmoke;
+  background-color: var(--theme-lighter);
   border: 1px solid lightgray;
   border-radius: 4px;
   font-size: 0.9rem
@@ -295,7 +295,7 @@ nav button {
   font-size: 1.5rem;
   width: var(--element-size);
   height: var(--element-size);
-  background-color: whitesmoke;
+  background-color: var(--theme-lighter);
   border-radius: 50%;
   transition: all 0.3s;
   cursor: pointer;
@@ -318,7 +318,7 @@ nav button {
   justify-content: center;
   align-items: center;
   border-radius: calc(var(--element-size) / 2);
-  border: 1px solid whitesmoke;
+  border: 1px solid var(--theme-lighter);
   transition: all 0.3s;
   outline: none;
   margin: 0 0.5rem;
@@ -331,7 +331,7 @@ nav button {
 }
 
 .nav-profile .user-container:hover {
-  background-color: whitesmoke;
+  background-color: var(--theme-lighter);
   cursor: pointer;
 }
 
@@ -344,7 +344,7 @@ nav button {
 }
 
 .nav-profile .user-container .profile-icon {
-  background-color: whitesmoke;
+  background-color: var(--theme-lighter);
   margin: 0;
 }
 

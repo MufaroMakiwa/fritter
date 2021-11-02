@@ -48,6 +48,7 @@ export default {
 
 html {
   --theme-color: #24bdd1;
+  --theme-lighter:#f0f0f0;
   --button-color-hover: #0199ad;
   --button-color-disabled: #a3b8bb;
   --background-color-selected: #dfecee;
@@ -56,7 +57,7 @@ html {
   --page-padding: 2rem;
   --input-color-hover: var(--background-color-selected);
   font: 16px sans-serif;
-  background: whitesmoke;
+  background: var(--theme-lighter);
 }
 
 body {
@@ -97,7 +98,7 @@ button:last-of-type {
 button:disabled {
   cursor: not-allowed;
   background-color: var(--button-color-disabled);
-  color: whitesmoke;
+  color: var(--theme-lighter);
 }
 
 button.cancel {

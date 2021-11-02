@@ -177,7 +177,7 @@ header .profile-details {
 
 .edit-profile-button {
   border: 1px solid lightgray;
-  background-color: whitesmoke;
+  background-color: white;
   color: black;
   display: inline-flex;
   align-items: center;

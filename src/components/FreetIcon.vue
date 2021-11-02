@@ -13,7 +13,7 @@ export default {
       type: Number
     },
     backgroundColor: {
-      default: "whitesmoke",
+      default: "var(--theme-lighter)",
       type: String
     }
   },

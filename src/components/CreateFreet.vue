@@ -222,7 +222,7 @@ export default {
 }
 
 textarea {
-  background-color: whitesmoke;
+  background-color: var(--theme-lighter);
   border: 1px solid lightgray;
   border-radius: 4px;
   padding: 12px;
