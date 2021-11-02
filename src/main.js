@@ -15,10 +15,11 @@ import {
   faHeart, 
   faRetweet,
   faEdit,
-  faTimes } from '@fortawesome/free-solid-svg-icons'
+  faTimes,
+  faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes)
+library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes, faExclamationTriangle)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.use(VueCookie);

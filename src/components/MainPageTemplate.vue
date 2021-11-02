@@ -1,5 +1,4 @@
 <template>
-
   <div v-if="loading" class="loader-container">
     <div class="loading"></div>
   </div>

@@ -1,38 +1,41 @@
 <template>
-  <router-view/>
+  <div class="app-container">
+    <router-view />
+    <AlertDialog ref="alert"/>
+  </div>
 </template>
 
 <script>
 import axios from 'axios';
+import AlertDialog from './components/AlertDialog';
 
 export default {
   name: "App",
 
-  async created() { 
+  components: {
+    AlertDialog
+  },
+
+  created() { 
     // intercept all axios responses and check for 401 errors when the user token is no longer valid
     axios.interceptors.response.use(
       undefined, 
       async (err) => {
-        if (err.response.data.error.userNotFound !== undefined) {
-          alert("Your account no longer exists.")
+        if (
+          err.response.data.error.userNotFound !== undefined || 
+          err.response.data.error.auth !== undefined) {
+          await this.$refs.alert.open("You have been signed out or your account no longer exists. Please try signing back in.");
           this.$store.dispatch("unauthenticateUser");
           this.$router.push({ name: "Login" })
         }
 
-        // This error from the server is because the user is not signed in
-        // The error handled here may be because the user was logged in in 
-        // two tabs and signed out on the other so tab in which the user
-        // is still "logged in" does not have updated information about the
-        // authentication status
-        if (err.response.data.error.auth !== undefined) {
-          alert(
-            "You have been signed out or your account no longer exists. Please try signing back in."
-          )
+        // response.data.error.auth from the server is because the user is not signed in
+        // This may be because the user was logged in in two tabs and signed out on the other
+        // so the tab in which the user is still "logged in" does not have updated 
+        // information about the authentication status  
 
-          // signout the user
-          this.$store.dispatch("unauthenticateUser");
-          this.$router.push({name: "Login"});
-        }
+        // response.data.error.userNotFound is when the user's account is deleted and the
+        // tab the user is trying to make an update from does not have the updated auth status
 
         return Promise.reject(err);
       }
@@ -48,7 +51,7 @@ export default {
 
 html {
   --theme-color: #24bdd1;
-  --theme-lighter:#f0f0f0;
+  --theme-lighter:rgb(239, 240, 240);
   --button-color-hover: #0199ad;
   --button-color-disabled: #a3b8bb;
   --background-color-selected: #dfecee;
@@ -65,6 +68,11 @@ body {
   flex-direction: column;
   display: flex;
   margin: 0;
+}
+
+.app-container {
+  width: 100%;
+  height: 100%;
 }
 
 .card {

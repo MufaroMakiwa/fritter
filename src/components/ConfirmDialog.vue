@@ -47,13 +47,13 @@ export default {
 
   methods: {
     cancel() {
-      this.resolve(false);
       this.dialog = false;
+      this.resolve(false);
     },
 
     agree() {
-      this.resolve(true);
       this.dialog = false;
+      this.resolve(true);
     },
 
     open(title, summary, actionButtonLabel, options = {}) {

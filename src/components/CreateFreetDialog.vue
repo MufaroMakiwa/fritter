@@ -48,10 +48,6 @@ export default {
         this.animateModalClick = false;
       }, 100);
     },
-
-    test() {
-      console.log("Modal click");
-    }
   }
 }
 </script>
