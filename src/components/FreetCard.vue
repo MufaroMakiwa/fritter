@@ -206,11 +206,12 @@ export default {
       )) {
         delete_(`/api/freets/${this.freet.freetId}`)
           .then(response => {
+            const toastMessage = "You deleted a freet";
             if (response.isSuccess) {
-              eventBus.$emit('display-toast', "You deleted a freet");
+              eventBus.$emit('display-toast', toastMessage);
 
             } else {
-              this.handleDeleteErrors(response);
+              this.handleDeleteErrors(response, toastMessage);
             }
             // in both cases update the freets
             eventBus.$emit('update-freets');
@@ -267,18 +268,18 @@ export default {
     async handleFreetNotFound(response) {
       // this may happen when a freet in deleted in another session while the
       // user in another current session is trying to modify the same freet
-      if (response.data.error.freetNotFound !== undefined) {
+      if (response.data.error.freetNotFound) {
         await this.$refs.alert.open("Sorry, this freet has already been deleted.");
         return true;
       }
       return false;
     },
 
-    async handleDeleteErrors(response) {
+    async handleDeleteErrors(response, toastMessage) {
       // if the freet is not found, the user has already deleted it. No need to 
       // display the deleted alert
-      if (response.data.error.freetNotFound !== undefined) {
-        eventBus.$emit("display-toast", "You deleted a freet")
+      if (response.data.error.freetNotFound) {
+        eventBus.$emit("display-toast", toastMessage)
         return;
       }
       // this error is probably gonna be due to unathorized edit or invalid
@@ -293,7 +294,7 @@ export default {
       // this will probably happen when a user (un)likes a freet in another
       // browser and tries to (un)like in a different browser. There is no need 
       // to display an alert since it will simply get this in sync with other sessions
-      if (response.data.error.likeError) {
+      if (response.data.error.ignoreError) {
         eventBus.$emit('display-toast', toastMessage);
       }
 
@@ -306,7 +307,7 @@ export default {
       }
       // this will probably happen when a user (un)likes a freet in another
       // browser and tries to (un)like in a different browser
-      if (response.data.error.refreetError) {
+      if (response.data.error.ignoreError) {
         eventBus.$emit('display-toast', toastMessage);
       }
 

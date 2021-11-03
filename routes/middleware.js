@@ -219,7 +219,7 @@ const checkFreetLikingStatus = (req, res, next, expected) => {
   if (!expected && isLiking) {
     res.status(403).json({
       error: {
-        likeError: "You cannot like this freet because you liked it already"
+        ignoreError: "You cannot like this freet because you liked it already"
       }
     }).end();
     return;
@@ -228,7 +228,7 @@ const checkFreetLikingStatus = (req, res, next, expected) => {
   if (expected && !isLiking) {
     res.status(403).json({
       error: {
-        likeError: "You cannot dislike this freet because you have not liked it"
+        ignoreError: "You cannot dislike this freet because you have not liked it"
       }
     }).end();
     return;
@@ -245,7 +245,7 @@ const checkFreetRefreetingStatus = (req, res, next, expected) => {
   if (!expected && isRefreeting) {
     res.status(403).json({
       error: {
-        refreetError: "You cannot refreet this freet because you refreeted it already"
+        ignoreError: "You cannot refreet this freet because you refreeted it already"
       }
     }).end();
     return;
@@ -254,7 +254,7 @@ const checkFreetRefreetingStatus = (req, res, next, expected) => {
   if (expected && !isRefreeting) {
     res.status(403).json({
       error: {
-        refreetError: "You cannot unrefreet this freet because you have not refreeted it"
+        ignoreError: "You cannot unrefreet this freet because you have not refreeted it"
       }
     }).end();
     return;
@@ -290,7 +290,7 @@ const isFollowingValid = (req, res, next) => {
 
     res.status(403).json({
       error: {
-        relationError: message
+        ignoreError: message
       }
     }).end();
     return;
@@ -310,7 +310,7 @@ const isUnfollowingValid = (req, res, next) => {
                     : "You cannot unfollow someone you are not following"
     res.status(403).json({
       error: {
-        relationError: message
+        ignoreError: message
       }
     }).end();
     return;
@@ -320,7 +320,7 @@ const isUnfollowingValid = (req, res, next) => {
   if (req.body.isPendingRequest && relation.status === "ACTIVE") {
     res.status(403).json({
       error: {
-        relationError: "You follow request has already been accepted"
+        relationError: "This follow request has already been accepted."
       }
     }).end();
     return;
@@ -336,7 +336,7 @@ const isPendingRequestExists = (req, res, next) => {
   if (relation === undefined) {
     res.status(403).json({
       error: {
-        relationError: "This follow request no longer exists"
+        relationError: "This follow request no longer exists."
       }
     }).end();
     return;
@@ -357,15 +357,16 @@ const isRemovingFollowerValid = (req, res, next) => {
     if (req.body.isPendingRequest) {
       res.status(403).json({
         error: {
-          relationError: "This follow request no longer exists"
+          ignoreError: "This follow request no longer exists"
         }
       }).end();
       
     // deleting a follower who no longer exists
-    // no need to send an error since the user had been unfollowed already
     } else {
-      res.status(200).json({ 
-        message: `${follower.username} no longer follows you`
+      res.status(403).json({ 
+        error: {
+          ignoreError: `${follower.username} no longer follows you`
+        }
       }).end();
     }
     return;
@@ -375,7 +376,7 @@ const isRemovingFollowerValid = (req, res, next) => {
   if (req.body.isPendingRequest && relation.status === "ACTIVE") {
     res.status(403).json({
       error: {
-        relationError: "You have already accepted this follow request"
+        relationError: "This follow request has already been accepted."
       }
     }).end();
     return;

@@ -59,26 +59,10 @@ export default {
   },
 
   methods: {
-    handleFollowErrors(response) {
-      // if for some reason the username is wrong
-      if (response.data.error.username) {
-        alert(response.data.error.username);
-      }
-
-      if (response.data.error.relationError) {
-        alert(response.data.error.relationError);
-      }
-
-      // other expected errors are when user is not logged in and that is 
-      // handled in App.vue
-    },
-
     addFollow() {
       post('/api/user/following', { username: this.username })
         .then(response => {
-          if (response.isSuccess) {
-            eventBus.$emit('display-toast', response.data.message);
-          } else {
+          if (!response.isSuccess) {
             this.handleFollowErrors(response);
           }
           // in both cases, update the user's profile
@@ -90,15 +74,32 @@ export default {
       const options = { isPendingRequest }
       delete_(`/api/user/following/${this.username}`, options)
         .then(response => {
-          if (response.isSuccess) {
-            eventBus.$emit('display-toast', response.data.message);
-          } else {
+          if (!response.isSuccess) {
             this.handleFollowErrors(response);
           }
           // in both cases, update the user's profile
           eventBus.$emit('update-profile');
         })
     },
+
+    async handleFollowErrors(response) {
+      // if the error can be ignored from the backend
+      if (response.data.error.ignoreError) {
+        return;
+      }
+      // if for some reason the username is wrong
+      if (response.data.error.username) {
+        await this.$refs.alert.open(response.data.error.username);
+      }
+
+      if (response.data.error.relationError) {
+        await this.$refs.alert.open(response.data.error.relationError);
+      }
+
+      // other expected errors are when user is not logged in and that is 
+      // handled in App.vue
+    },
+
 
     async handleFollow() {
       switch(this.followingStatus) {

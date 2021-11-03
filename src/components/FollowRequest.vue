@@ -17,12 +17,16 @@
     </div>
 
     <ConfirmDialog ref="confirm"/>
+
+    <AlertDialog ref="alert" />
+
   </div>
 </template>
 
 <script>
 import { delete_, patch } from '../utils/crud-helpers';
 import ConfirmDialog from './ConfirmDialog';
+import AlertDialog from './AlertDialog';
 
 
 export default {
@@ -33,7 +37,7 @@ export default {
   },
 
   components: {
-    ConfirmDialog
+    ConfirmDialog, AlertDialog
   },
 
   methods: {
@@ -46,10 +50,10 @@ export default {
 
     accept() {
       patch('/api/user/followers', { username: this.request.username })
-        .then(response => {
+        .then(async response => {
           // we only need to worry about unsuccessful request for which we notify the user
           if (!response.isSuccess) {
-            this.handleErrors(response);
+            await this.handleErrors(response);
           }
           // in both cases update the user
           this.$store.dispatch('getUser');
@@ -67,23 +71,28 @@ export default {
 
       const options = { isPendingRequest: true };
       delete_(`/api/user/followers/${this.request.username}`, options)
-        .then(response => {
+        .then(async response => {
+          // this is async to await error handling
           if (!response.isSuccess) {
-            this.handleErrors(response);
+            await this.handleErrors(response);
           }
           // in both cases update the user
           this.$store.dispatch('getUser');
         })
     },
 
-    handleErrors(response) {
+    async handleErrors(response) {
+      // if the error can be ignored from the backend
+      if (response.data.error.ignoreError) {
+        return;
+      }
       // if for some reason the username is wrong
       if (response.data.error.username) {
-        alert(response.data.error.username);
+        await this.$refs.alert.open(response.data.error.username);
       }
 
       if (response.data.error.relationError) {
-        alert(response.data.error.relationError);
+        await this.$refs.alert.open(response.data.error.relationError);
       }
     }
   }
