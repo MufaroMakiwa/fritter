@@ -157,7 +157,7 @@ export default {
         "This can’t be undone and will remove all this freet's likes and refreets.",
         "Update"
       )) {
-        eventBus.$emit('stop-editing-freet');
+        this.stopEditing();
         return;
       }
 
@@ -180,7 +180,7 @@ export default {
       // user in another current session is trying to modify the same freet
       if (response.data.error.freetNotFound) {
         await this.$refs.alert.open("The freet you are trying to modify no longer exists.");
-        eventBus.$emit('stop-editing-freet');
+        this.stopEditing();
         eventBus.$emit("update-freets");
         return;
       }

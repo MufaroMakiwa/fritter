@@ -290,7 +290,10 @@ const isFollowingValid = (req, res, next) => {
 
     res.status(403).json({
       error: {
-        ignoreError: message
+        ignoreError: {
+          message: message,
+          status: relation.status
+        }
       }
     }).end();
     return;

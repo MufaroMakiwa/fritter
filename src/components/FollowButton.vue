@@ -62,7 +62,14 @@ export default {
     addFollow() {
       post('/api/user/following', { username: this.username })
         .then(response => {
-          if (!response.isSuccess) {
+          if (response.isSuccess) {
+            const toastMessage = response.data.followResponse.relationStatus === "ACTIVE"
+                                ? `You are now following ${this.username}`
+                                : `You sent a follow request to ${this.username}`;
+            eventBus.$emit('display-toast', toastMessage);
+
+          } else {
+            // for ingore error, the error message depends on the relation status
             this.handleFollowErrors(response);
           }
           // in both cases, update the user's profile
@@ -74,17 +81,34 @@ export default {
       const options = { isPendingRequest }
       delete_(`/api/user/following/${this.username}`, options)
         .then(response => {
-          if (!response.isSuccess) {
-            this.handleFollowErrors(response);
+          const toastMessage = isPendingRequest 
+                    ? `You canceled follow request to ${this.username}`
+                    : `You are nolonger following ${this.username}`;
+
+          if (response.isSuccess) {
+            eventBus.$emit('display-toast', toastMessage);
+
+          } else {
+            this.handleFollowErrors(response, toastMessage);
           }
           // in both cases, update the user's profile
           eventBus.$emit('update-profile');
         })
     },
 
-    async handleFollowErrors(response) {
+    async handleFollowErrors(response, toastMessage) {
       // if the error can be ignored from the backend
       if (response.data.error.ignoreError) {
+        if (toastMessage) {
+          eventBus.$emit('display-toast', toastMessage);
+
+        } else {
+          // this will be when the toast message depends on the status prop of ignore error
+          const message = response.data.error.ignoreError.status === "ACTIVE"
+                          ? `You are now following ${this.username}`
+                          : `You sent a follow request to ${this.username}`;
+          eventBus.$emit('display-toast', message);
+        }
         return;
       }
       // if for some reason the username is wrong

@@ -173,11 +173,11 @@ export default {
     },
 
     logIn() {
-      this.$router.push({ name: "Login" });
+      this.$router.push({ name: "Login" }).catch(() => {});
     },
     
     register() {
-      this.$router.push({ name: "Register" });
+      this.$router.push({ name: "Register" }).catch(() => {});
     },
 
     toggleMenu(event) {

@@ -230,12 +230,12 @@ export default {
 
     toggleLike(func, toastMessage) {
       func(`/api/freets/${this.freet.freetId}/likes`)
-        .then(response => {
+        .then(async response => {
           if (response.isSuccess) {
             eventBus.$emit('display-toast', toastMessage);
 
           } else { 
-            this.handleLikeErrors(response, toastMessage);
+            await this.handleLikeErrors(response, toastMessage);
           }
           // in both cases, trigger a refresh
           eventBus.$emit('update-freets');
@@ -253,12 +253,12 @@ export default {
 
     toggleRefreet(func, toastMessage) {
       func(`/api/freets/${this.freet.freetId}/refreets`)
-        .then(response => {
+        .then(async response => {
           if (response.isSuccess) {
             eventBus.$emit('display-toast', toastMessage);
 
           } else {
-            this.handleRefreetErrors(response, toastMessage);
+            await this.handleRefreetErrors(response, toastMessage);
           }
           // in both cases, trigger a refresh
           eventBus.$emit('update-freets');

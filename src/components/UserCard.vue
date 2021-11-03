@@ -84,16 +84,20 @@ export default {
       const options = { isPendingRequest: false };
       delete_(`/api/user/followers/${this.user.username}`, options)
         .then(async response => {
-          if (!response.isSuccess) {
-            await this.handleFollowErrors(response);
+          const toastMessage = `${this.user.username} no longer follows you`;
+          if (response.isSuccess) {
+            eventBus.$emit('display-toast', toastMessage);
+          } else {
+            await this.handleFollowErrors(response, toastMessage);
           }
           eventBus.$emit('update-profile');
         })
     },
 
-    async handleFollowErrors(response) {
+    async handleFollowErrors(response, toastMessage) {
       // if the error can be ignored from the backend
       if (response.data.error.ignoreError) {
+        eventBus.$emit('display-toast', toastMessage);
         return;
       }
       // if for some reason the username is wrong

@@ -27,6 +27,7 @@
 import { delete_, patch } from '../utils/crud-helpers';
 import ConfirmDialog from './ConfirmDialog';
 import AlertDialog from './AlertDialog';
+import { eventBus } from '../main';
 
 
 export default {
@@ -51,9 +52,11 @@ export default {
     accept() {
       patch('/api/user/followers', { username: this.request.username })
         .then(async response => {
-          // we only need to worry about unsuccessful request for which we notify the user
-          if (!response.isSuccess) {
-            await this.handleErrors(response);
+          const toastMessage = `${this.request.username} now follows you`;
+          if (response.isSuccess) {
+            eventBus.$emit('display-toast', toastMessage);
+          } else {
+            await this.handleErrors(response, toastMessage);
           }
           // in both cases update the user
           this.$store.dispatch('getUser');
@@ -73,17 +76,26 @@ export default {
       delete_(`/api/user/followers/${this.request.username}`, options)
         .then(async response => {
           // this is async to await error handling
-          if (!response.isSuccess) {
-            await this.handleErrors(response);
+          const requestUsername = this.request.username;
+          const toastName = requestUsername.charAt(requestUsername.length - 1).toLowerCase() === "s"
+                            ? `${requestUsername}'`
+                            : `${requestUsername}'s`
+          const toastMessage = `You declined ${toastName} follow request`;
+
+          if (response.isSuccess) {
+            eventBus.$emit('display-toast', toastMessage);
+          } else {
+            await this.handleErrors(response, toastMessage);
           }
           // in both cases update the user
           this.$store.dispatch('getUser');
         })
     },
 
-    async handleErrors(response) {
+    async handleErrors(response, toastMessage) {
       // if the error can be ignored from the backend
       if (response.data.error.ignoreError) {
+        eventBus.$emit('display-toast', toastMessage);
         return;
       }
       // if for some reason the username is wrong
