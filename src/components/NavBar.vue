@@ -3,14 +3,7 @@
     <nav>
       <h1 @click="renderPage('Home')" class="app-name">Fritter</h1>
  
-      <input 
-        name="author" 
-        type="search"
-        class="nav-input"
-        value autocomplete="off"
-        v-model="author"
-        @keyup.enter="handleSubmit($event)"
-        placeholder="Search Fritter"/>   
+      <SearchBar />  
 
       <div v-if="!isSignedIn">
         <button @click="logIn">Log in</button>
@@ -55,6 +48,7 @@
 import NotificationIcon from './NotificationIcon';
 import CreateFreetDialog from './CreateFreetDialog';
 import ConfirmDialog from './ConfirmDialog';
+import SearchBar from './SearchBar';
 import { delete_ } from '../utils/crud-helpers';
 import { eventBus } from '../main';
 import ProfileMenu from './ProfileMenu';
@@ -81,17 +75,13 @@ export default {
       return this.$store.getters.isSignedIn;
     },
 
-    canSubmit() {
-      return this.author.trim().length > 0;
-    },
-
     isNotificationPage() {
       return this.$route.name === "Notifications";
     }
   },
 
   components: {
-    NotificationIcon, ProfileMenu, CreateFreetDialog, ConfirmDialog
+    NotificationIcon, ProfileMenu, CreateFreetDialog, ConfirmDialog, SearchBar
   },
 
   methods: {
@@ -153,21 +143,6 @@ export default {
       }
     },
 
-    handleSubmit(event) {
-      // remove focus
-      event.target.blur();
-
-      if (!this.canSubmit) {
-        return;
-      }
-
-      // navigate to the profile page
-      this.navigate(this.author.trim());
-      
-      // clear search query 
-      this.author = ""; 
-    },
-
     goToProfile(username) { 
       this.navigate(username);   
     },
@@ -196,12 +171,14 @@ export default {
     eventBus.$on('navigate-to-profile', this.goToProfile);
     eventBus.$on('logout-menu-selected', this.signOut);
     eventBus.$on('navigate-to-settings', this.goToSettings);
+    eventBus.$on('search-query', this.navigate);
   },
 
   beforeDestroy() {
     eventBus.$off('navigate-to-profile', this.goToProfile);
     eventBus.$off('logout-menu-selected', this.signOut);
     eventBus.$off('navigate-to-settings', this.goToSettings);
+    eventBus.$off('search-query', this.navigate);
   }
 }
 </script>
@@ -251,21 +228,6 @@ nav button {
   color: var(--button-color-hover);
   cursor: pointer;
 }
-
-
-.nav-input {
-  padding: 12px 16px;
-  margin: 0 1rem;
-  transition: all 0.3s;
-  height: var(--element-size);
-  max-width: 400px;
-  flex-grow: 1;
-  background-color: var(--theme-lighter);
-  border: 1px solid lightgray;
-  border-radius: 4px;
-  font-size: 0.9rem
-}
-
 
 .nav-profile {
   display: flex;
