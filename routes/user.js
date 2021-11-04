@@ -10,6 +10,22 @@ const router = express.Router();
 
 
 /**
+ * Get search suggestions based on the query
+ * 
+ * @name GET /user/search
+ * @return {String[]} - A list of usernames that start with the given query
+ */
+router.get('/search', (req, res) => {
+  const suggestions = users.filter(user => {
+    return user.username.toLowerCase().includes(req.query.querytext.toLowerCase())
+  });
+
+  res.status(200).json({
+    suggestions: suggestions.map(user => user.username)
+  }).end();
+});
+
+/**
  * Check if a user is signed in.
  * 
  * @name GET /user/session

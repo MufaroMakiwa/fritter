@@ -72,7 +72,7 @@ export default {
 }
 
 .option:hover {
-  background-color: var(--theme-lighter);
+  background-color: whitesmoke;
   cursor: pointer;
 }
 

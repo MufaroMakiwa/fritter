@@ -134,11 +134,19 @@ span, p {
 
 input, textarea {
   transition: all 0.3s;
+  border: 1px solid lightgray;
+  outline: none;
 }
 
 input:hover:not(:focus),
 textarea:hover:not(:focus) {
   background-color: var(--input-color-hover);
+}
+
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 3px var(--theme-color);
+  border: 1px solid var(--theme-color);
 }
 
 .overflow-text {

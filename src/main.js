@@ -16,10 +16,11 @@ import {
   faRetweet,
   faEdit,
   faTimes,
-  faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+  faExclamationTriangle,
+  faSearch } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes, faExclamationTriangle)
+library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes, faExclamationTriangle, faSearch)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.use(VueCookie);

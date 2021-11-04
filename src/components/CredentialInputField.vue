@@ -87,7 +87,6 @@ export default {
 }
 
 .input-container .input {
-  border: 1px solid lightgray;
   padding: 10px;
   border-radius: 4px;
   letter-spacing: .075rem;
