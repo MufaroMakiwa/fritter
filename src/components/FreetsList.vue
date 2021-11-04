@@ -36,7 +36,6 @@ export default {
 
 <style scoped>
 .freets-list {
-  margin-bottom: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;

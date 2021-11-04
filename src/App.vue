@@ -55,7 +55,7 @@ html {
   --button-color-hover: #0199ad;
   --button-color-disabled: #a3b8bb;
   --background-color-selected: #dfecee;
-  --max-page-width: 900px;
+  --max-page-width: 950px;
   --nav-bar-height: 70px;
   --page-padding: 2rem;
   --input-color-hover: var(--background-color-selected);

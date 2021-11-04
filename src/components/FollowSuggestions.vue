@@ -10,7 +10,7 @@
         <div class="inner">
           <font-awesome-icon icon="user-circle" class="icon"/>
 
-          <span class="username">{{ suggestion }}</span>
+          <span class="username overflow-text">{{ suggestion }}</span>
           
           <FollowButton 
             followingStatus="NONE"
@@ -91,7 +91,7 @@ export default {
   align-items: center;
   width: 100%;
   border-top: 1px solid var(--theme-lighter);
-  padding: 1rem 0;
+  padding: 1.5rem 0;
 }
 
 .suggestion-item:first-of-type .inner {
@@ -103,7 +103,7 @@ export default {
 }
 
 .icon {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
 }
 
 .username {

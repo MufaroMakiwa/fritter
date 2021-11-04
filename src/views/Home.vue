@@ -39,7 +39,7 @@ export default {
     return {
       loading: true,
       freets: [],
-      suggestions: ["mufaro", "emmanuel", "makiwa", "praise"]
+      suggestions: ["mufaro", "emmanuel", "makiwa"]
     }
   },
 
@@ -95,9 +95,13 @@ export default {
 
 <style scoped>
 .home-container {
+  --sidebar-width: 260px;
   width: 100%;
   display: flex;
   flex-direction: row;
+  position: relative;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .main-section {
@@ -109,9 +113,11 @@ export default {
 }
 
 .suggestions-section {
-  width: 250px;
+  width: var(--sidebar-width);
   flex-shrink: 0;
   margin-left: 2rem;
+  position: sticky;
+  top: calc(var(--nav-bar-height) + var(--page-padding));
 }
 
 .home-create-freet {
