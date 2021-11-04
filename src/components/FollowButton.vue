@@ -1,7 +1,7 @@
 <template>
   <div>
     <button 
-      :class="['profile-header-button', 'follow-button', followButton.cssClass ]" 
+      :class="['profile-header-button', 'follow-button', followButton.cssClass, isSuggestion ? 'medium' : '' ]" 
       :data-hover="followButton.hoverText"
       :data-text="followButton.text"
       @click.stop="handleFollow">
@@ -24,7 +24,13 @@ export default {
 
   props: {
     followingStatus: String,
+
     username: String,
+
+    isSuggestion: {
+      default: false,
+      type: Boolean,
+    } 
   },
 
   components: {
@@ -156,6 +162,12 @@ export default {
 .follow-button {
   position: relative;
   display: inline-block;
+}
+
+.follow-button.medium {
+  width: 75px;
+  height: 32px;
+  border-radius: 16px;
 }
 
 .follow-button::before,

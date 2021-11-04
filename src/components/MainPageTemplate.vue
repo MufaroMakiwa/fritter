@@ -109,7 +109,7 @@ main {
 }
 
 .freet-icon-container {
-  margin-right: 2rem;
+  margin-right: 1.5rem;
 }
 
 /* 

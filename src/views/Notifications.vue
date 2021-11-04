@@ -52,7 +52,7 @@ export default {
 <style scoped>
 .page-title {
   color: gray;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .follow-requests {

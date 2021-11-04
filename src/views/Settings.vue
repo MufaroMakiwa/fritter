@@ -110,7 +110,7 @@ export default {
 
 .settings-operations {
   flex-grow: 1;
-  margin-left: 2rem;
+  margin-left: 1.5rem;
 }
 
 .settings-operations h3 {

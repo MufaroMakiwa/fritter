@@ -138,12 +138,12 @@ form {
   justify-content: space-between;
   background-color: white;
   margin-bottom: 1rem;
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 h2 {
   margin-top: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 input[type="submit"] {
@@ -153,7 +153,7 @@ input[type="submit"] {
   font-weight: bold;
   border: 1px solid lightgray;
   border-radius: 4px;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   padding: 8px;
   transition: all 0.3s;
 }

@@ -116,7 +116,7 @@ export default {
 <style scoped>
 .user-container {
   display: flex;
-  padding: 2rem;
+  padding: 1.5rem;
   border-bottom: 1px solid lightgray;
   flex-direction: row;
   width: 100%;
@@ -141,7 +141,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  margin-left: 2rem;
+  margin-left: 1.5rem;
 }
 
 .user-details .username {

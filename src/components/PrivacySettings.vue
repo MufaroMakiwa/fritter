@@ -140,14 +140,14 @@ export default {
 
 .section-note {
   color: gray;
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   text-justify: inter-word;
   text-align: justify;
   word-break: normal;
 }
 
 .update-link {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   color: red;
   cursor: pointer;
 }
@@ -181,7 +181,7 @@ export default {
   --outer-radius: calc(var(--slider-radius) + var(--padding) * 2);
   display: inline-block;
   cursor: pointer;
-  margin-right: 2rem;
+  margin-right: 1.5rem;
 }
 
 .toggle-fill {

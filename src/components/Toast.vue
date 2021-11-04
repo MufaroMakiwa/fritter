@@ -23,7 +23,7 @@ export default {
   display: inline-block;
   padding: 16px;
   width: fit-content;
-  bottom: 2rem;
+  bottom: 1.5rem;
   left: 50%;
   transform: translateX(-50%);
   background-color: var(--theme-color);

@@ -144,7 +144,7 @@ export default {
 header {
   display: flex;
   flex-direction: column;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
@@ -156,7 +156,7 @@ header .profile-details {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding: 2rem;
+  padding: 1.5rem;
   width: 100%;
   background-color: var(--input-color-hover);
 }

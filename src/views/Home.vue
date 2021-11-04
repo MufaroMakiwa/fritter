@@ -1,11 +1,19 @@
 <template>
   <MainPageTemplate :loading="loading">
-    <div class="home-create-freet card" v-if="isSignedIn">
-      <CreateFreet />
-    </div>
+    <div class="home-container">
+      <section class="main-section">
+        <div class="home-create-freet card" v-if="isSignedIn">
+          <CreateFreet />
+        </div>
 
-    <h2>Feed</h2>
-    <FreetsList :freets="freets" />
+        <h2>Feed</h2>
+        <FreetsList :freets="freets" />
+      </section>
+
+      <section class="suggestions-section">
+        <FollowSuggestions :suggestions="suggestions"/>
+      </section>
+    </div>
 
   </MainPageTemplate>
 </template>
@@ -13,6 +21,7 @@
 <script>
 import MainPageTemplate from '../components/MainPageTemplate';
 import CreateFreet from '../components/CreateFreet';
+import FollowSuggestions from '../components/FollowSuggestions';
 import FreetsList from '../components/FreetsList';
 import { eventBus } from '../main';
 import { get } from '../utils/crud-helpers';
@@ -23,13 +32,14 @@ export default {
   name: "Home",
 
   components: {
-    MainPageTemplate, CreateFreet, FreetsList
+    MainPageTemplate, CreateFreet, FreetsList, FollowSuggestions
   },
 
   data() {
     return {
       loading: true,
-      freets: []
+      freets: [],
+      suggestions: ["mufaro", "emmanuel", "makiwa", "praise"]
     }
   },
 
@@ -84,9 +94,29 @@ export default {
 </script>
 
 <style scoped>
+.home-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.main-section {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.suggestions-section {
+  width: 250px;
+  flex-shrink: 0;
+  margin-left: 2rem;
+}
+
 .home-create-freet {
-  padding: 2rem;
-  margin-bottom: 2rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 h2 {

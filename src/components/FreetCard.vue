@@ -327,7 +327,7 @@ export default {
 
 <style scoped>
 .freet-outer {
-  padding: 2rem;
+  padding: 1.5rem;
   border-bottom: 1px solid lightgray;
   display: flex;
   flex-direction: column;
