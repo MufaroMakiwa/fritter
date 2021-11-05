@@ -53,6 +53,7 @@ class Users {
     return data.filter(user => user.userId === userId)[0];
   }
 
+
   /**
    * Find a User by Name.
    * 

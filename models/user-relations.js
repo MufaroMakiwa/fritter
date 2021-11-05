@@ -37,6 +37,46 @@ class UserRelations {
   }
 
   /**
+   * Sort users by followers
+   * 
+   * @param {String[]} userIds - An array of userIds
+   * @return {Object[]} - An array of user objects with their followers sorted by 
+   *                      number of followers
+   */
+  static getSortedByFollowers(userIds) {
+    let stats = userIds.reduce((obj, userId) => {
+      obj[userId] = { followers: 0, following: 0, userId: userId };
+      return obj
+    }, {});
+
+    // get to user follower and following count
+    data.forEach(userRelation => {
+
+      // if it is a follow request, skip it
+      if (userRelation.status !== "ACTIVE") {
+        return;
+      }
+
+      const followerId = userRelation.followerId;
+      const targetUserId = userRelation.targetUserId;
+
+      if (followerId in stats) {
+        stats[followerId].following ++;
+      }
+
+      if (targetUserId in stats) {
+        stats[targetUserId].followers ++;
+      }
+    })
+
+    // get the list of objects
+    return userIds
+            .map(userId => stats[userId])
+            .sort((a, b) => a.followers > b.followers ? 1 : -1);
+    
+  }
+
+  /**
    * Check if user with followerId follows or sent follow request to user with targetUserId
    * 
    * @param {string} followerId - Id of following user

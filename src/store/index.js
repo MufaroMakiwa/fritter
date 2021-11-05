@@ -10,11 +10,10 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     user: null,
+    suggestions: [],
   },
 
   mutations: {
-    // synchronous information
-
     setUser(state, payload) {
       if (payload !== null) {
         cookie.set("fritter-auth", payload.userId);
@@ -22,16 +21,20 @@ const store = new Vuex.Store({
         cookie.delete("fritter-auth");
       }
       state.user = payload;
+    },
+
+    setSuggestions(state, payload) {
+      state.suggestions = payload;
     }
   },
 
   actions: {
-    // asynchorous information
-
     async getUser(state) {
       const response = await get('/api/user/session');
       if (response.isSuccess) {
         state.commit("setUser", response.data.user);
+        state.commit("setSuggestions", response.data.suggestions);
+
       } else {
         // this request is not expected to get any errors from the server
       }
@@ -52,6 +55,7 @@ const store = new Vuex.Store({
 
   getters: {
     user: state => state.user,
+    suggestions: state => state.suggestions,
     isSignedIn: state => state.user !== null,
     isPrivateAccount: state => state.user !== null && state.user.isPrivateAccount,
   }

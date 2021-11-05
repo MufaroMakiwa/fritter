@@ -23,7 +23,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
   padding: 1.5rem;
+  overflow: scroll;
 }
 
 .entry-page-container main {
@@ -32,6 +34,7 @@ export default {
   width: 100%;
   max-width: 500px;
   flex-direction: column;
+  justify-content: flex-start;
   margin-top: 8rem;
   padding-bottom: 3em;
 }

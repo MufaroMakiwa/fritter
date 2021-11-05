@@ -75,7 +75,8 @@ export default {
             // for ingore error, the error message depends on the relation status
             this.handleFollowErrors(response);
           }
-          // in both cases, update the user's profile
+          // in both cases, update the user's profile and user obj
+          this.$store.dispatch("getUser");
           eventBus.$emit('update-profile');
         })
     },
@@ -95,6 +96,7 @@ export default {
             this.handleFollowErrors(response, toastMessage);
           }
           // in both cases, update the user's profile
+          this.$store.dispatch("getUser");
           eventBus.$emit('update-profile');
         })
     },

@@ -15,6 +15,41 @@ const getUsername = (userId) => {
 }
 
 /**
+ * Get follow suggestions for a user
+ * 
+ * @param {string} userId - id of user
+ * @return {String[]} - an array of usernames
+ */
+const getFollowSuggestions = (userId) => {
+  let publicUsers;
+
+  if (userId !== null) {
+    const requests = userRelations.getAllRequestsSent(userId).map(relation => relation.userId);
+    const following = userRelations.getAllFollowing(userId).map(relation => relation.userId);
+    const excludedUserIds = requests.concat(following, userId);
+
+    publicUsers = users.filter(user => {
+      return !user.isPrivateAccount && !excludedUserIds.includes(user.userId)
+    });
+  } else {
+    publicUsers = users.filter(user => !user.isPrivateAccount);
+  }
+
+  // get the suggestions
+  const suggestions = userRelations.getSortedByFollowers(publicUsers.map(user => user.userId));
+
+  // construct the response with at most 5 suggestions
+  return suggestions.map(suggestion => {
+    const username = users.findOneByUserId(suggestion.userId).username;
+    return {
+      username: username,
+      followers: suggestion.followers,
+      following: suggestion.following,
+    }
+  }).slice(0, 5);
+}
+
+/**
  * Get a freet object that is more readable
  * 
  * @param {Freet} freet - A freet 
@@ -242,6 +277,7 @@ module.exports = Object.freeze({
   constructLikeResponse,
   constructUserRelationResponse,
   addPrivateInformation,
-  getFreetsAndRefreetsFromFollowers
+  getFreetsAndRefreetsFromFollowers,
+  getFollowSuggestions
 });
 

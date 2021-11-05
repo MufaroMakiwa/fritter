@@ -87,11 +87,7 @@ export default {
       const response = await post(this.endpoint, body);
       if (response.isSuccess) {
         this.resetFields();
-
-        // wait for the store to update and go to home
-        await this.$store.dispatch("authenticateUser", response.data.user);
         this.$router.push({name: "Home"});
-
       } else {
         this.handleErrors(response);
       }

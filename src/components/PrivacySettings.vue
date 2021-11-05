@@ -10,14 +10,14 @@
           <div class="toggle-fill"></div>
         </div>
 
-        <span class="summary">
+        <span class="summary black">
           Make you account private to only your followers.
         </span>
       </div>
 
       <span class="section-note">
         By making your accout private, only your followers will be able to see your likes, refreets,
-        the people you follow and the people that follow you. 
+        following and followers. You account will also not be suggested to other users. 
       </span>
 
     </div>
@@ -70,7 +70,6 @@ export default {
       delete_('/api/user')
         .then(response => {
           if (response.isSuccess) {
-            this.$store.dispatch("unauthenticateUser");
             this.$router.push({name: "Login"}); 
 
           } else {
@@ -157,6 +156,10 @@ export default {
   text-align: justify;
   text-justify: inter-word;
   word-break: normal;
+}
+
+.summary.black {
+  color: black;
 }
 
 .update-link:hover {

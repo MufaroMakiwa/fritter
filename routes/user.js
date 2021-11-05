@@ -38,9 +38,15 @@ router.get('/search', (req, res) => {
  */
 router.get('/session', (req, res) => {
   const currentUser = users.findOneByUserId(req.session.userId);
-  res.status(200).json({
-    user: currentUser ? utils.constructUserResponse(currentUser, currentUser.userId) : null,
-  }).end();
+  const user = currentUser 
+                ? utils.constructUserResponse(currentUser, currentUser.userId) 
+                : null;
+
+  const suggestions = currentUser 
+                      ? utils.getFollowSuggestions(currentUser.userId) 
+                      : utils.getFollowSuggestions(null);
+
+  res.status(200).json({ user, suggestions }).end();
 });
 
 /**

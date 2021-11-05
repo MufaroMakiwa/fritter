@@ -107,7 +107,6 @@ export default {
       delete_('/api/user/session')
         .then(response => {
           if (response.isSuccess) {
-            this.$store.dispatch("unauthenticateUser");
             this.$router.push({name: "Login"}); 
           } else {
             // no error expected here. The unath error is caught in the

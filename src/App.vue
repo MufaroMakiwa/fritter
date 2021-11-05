@@ -34,7 +34,6 @@ export default {
           err.response.data.error.userNotFound !== undefined || 
           err.response.data.error.auth !== undefined) {
           await this.$refs.alert.open("You have been signed out or your account no longer exists. Please try signing back in.");
-          this.$store.dispatch("unauthenticateUser");
           this.$router.push({ name: "Login" })
         }
 

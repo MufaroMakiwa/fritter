@@ -51,13 +51,12 @@ export default {
 
 <style scoped>
 .profile-menu {
-  max-width: 300px;
-  min-width: 250px;
+  width: 300px;
   padding: 1rem;
   border: none;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
 }
 
 .option {

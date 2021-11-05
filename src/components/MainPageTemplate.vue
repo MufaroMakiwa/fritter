@@ -16,7 +16,7 @@
       </section>
 
       <section class="suggestions-section" v-if="displaySidebar">
-        <FollowSuggestions :suggestions="suggestions"/>
+        <FollowSuggestions />
       </section>
     </main>
   </div>
@@ -42,8 +42,6 @@ export default {
         isDisplayed: false,
         message: "",
       },
-
-      suggestions: ["mufaro", "emmanuel", "makiwa", "rutendo"]
     }
   },
 

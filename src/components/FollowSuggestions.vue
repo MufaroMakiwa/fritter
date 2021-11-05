@@ -1,27 +1,27 @@
 <template>
   <div class="container card">
-    <h4>Suggestions</h4>
+    <h4>{{ heading }}</h4>
 
     <div v-if="hasSuggestions" class="suggestions-container">
       <div 
         v-for="suggestion in suggestions"
-        :key="suggestion"
+        :key="suggestion.username"
         class="suggestion-item">
         <div class="inner">
           <font-awesome-icon icon="user-circle" class="icon"/>
 
-          <span class="username overflow-text">{{ suggestion }}</span>
+          <span class="username overflow-text">{{ suggestion.username }}</span>
           
-          <FollowButton 
+          <FollowButton v-if="isSignedIn"
             followingStatus="NONE"
-            :username="suggestion"
+            :username="suggestion.username"
             :isSuggestion="true"/>
         </div>
       </div>
     </div>
 
-    <span v-else>
-      There are no suggestions for you
+    <span v-else class="message">
+      There are no suggestions for you.
     </span>
   </div>
 </template>
@@ -32,20 +32,25 @@ import FollowButton from '../components/FollowButton';
 export default {
   name: "FollowSuggestions",
 
-  props: {
-    suggestions: {
-      type: Array,
-      default: () => []
-    }
-  },
-
   components: {
     FollowButton
   },
 
   computed: {
+    suggestions () {
+      return this.$store.getters.suggestions;
+    },
+
     hasSuggestions() {
       return this.suggestions.length > 0;
+    },
+
+    isSignedIn() {
+      return this.$store.getters.isSignedIn;
+    },
+
+    heading() {
+      return this.isSignedIn ? "Suggestions" : 'Popular users';
     }
   }
 
@@ -78,6 +83,11 @@ export default {
   align-items: flex-start;
 }
 
+.message {
+  padding: 1.5rem;
+  color: gray;
+}
+
 .suggestion-item {
   width: 100%;
   transition: all 0.3s;
@@ -100,7 +110,7 @@ export default {
 }
 
 .suggestion-item:hover {
-  background-color: var(--theme-lighter);
+  background-color: whitesmoke;
 }
 
 .icon {
