@@ -144,6 +144,7 @@ export default {
 header {
   display: flex;
   flex-direction: column;
+  width: 100%;
   margin-bottom: 1.5rem;
   justify-content: center;
   align-items: center;

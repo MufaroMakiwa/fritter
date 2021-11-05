@@ -11,7 +11,13 @@
       :message="toast.message" />
 
     <main>
-      <slot></slot>
+      <section :class="['main-section', displaySidebar ? 'padded' : '']">
+        <slot></slot>
+      </section>
+
+      <section class="suggestions-section" v-if="displaySidebar">
+        <FollowSuggestions :suggestions="suggestions"/>
+      </section>
     </main>
   </div>
 </template>
@@ -20,12 +26,14 @@
 import NavBar from "./NavBar";
 import Toast from "./Toast";
 import { eventBus } from '../main';
+import FollowSuggestions from './FollowSuggestions';
+
 
 export default {
   name: "MainPageTemplate",
 
   components: {
-    NavBar, Toast
+    NavBar, Toast, FollowSuggestions
   },
 
   data() {
@@ -33,12 +41,19 @@ export default {
       toast: {
         isDisplayed: false,
         message: "",
-      }
+      },
+
+      suggestions: ["mufaro", "emmanuel", "makiwa", "rutendo"]
     }
   },
 
   props: {
     loading: {
+      default: false,
+      type: Boolean
+    },
+
+    displaySidebar: {
       default: false,
       type: Boolean
     }
@@ -68,6 +83,7 @@ export default {
 
 <style>
 .page-container {
+  --sidebar-width: 260px;
   width: 100%;
   height: 100%;
   position: relative;
@@ -82,9 +98,47 @@ main {
   max-width: var(--max-page-width);
   margin-top: var(--nav-bar-height);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   padding: var(--page-padding);
+  align-items: flex-start;
+  justify-content: flex-end;
 }
+
+.main-section {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.main-section.padded {
+  margin-right: var(--page-padding);
+  /* margin-right: calc(var(--sidebar-width) + var(--page-padding)); */
+}
+
+.suggestions-section {
+  width: var(--sidebar-width);
+  flex-shrink: 0;
+  position: sticky;
+  top: calc(var(--nav-bar-height) +  var(--page-padding));
+  bottom: 0;
+
+  /* position: fixed;
+  top: var(--nav-bar-height);
+  padding-top: var(--page-padding);
+  bottom: 0;
+  z-index: 1;
+  overflow-y: scroll;
+   -ms-overflow-style: none; 
+  scrollbar-width: 0;
+  padding-bottom: var(--page-padding); */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+/* .suggestions-section::-webkit-scrollbar {
+  display: none;
+} */
 
 .loader-container {
   display: flex;
@@ -139,6 +193,30 @@ button in the profile header
   }
   100% {
     opacity: 1;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .page-container {
+    --sidebar-width: 240px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .main-section {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  .main-section.padded {
+    margin-right: 0;
+  }
+
+  .suggestions-section {
+    display: none;
   }
 }
 </style>

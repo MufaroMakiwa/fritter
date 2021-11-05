@@ -1,19 +1,11 @@
 <template>
-  <MainPageTemplate :loading="loading">
-    <div class="home-container">
-      <section :class="['main-section', isSignedIn ? 'main-padded' : '']">
-        <div class="home-create-freet card" v-if="isSignedIn">
-          <CreateFreet />
-        </div>
-
-        <h2>Feed</h2>
-        <FreetsList :freets="freets" />
-      </section>
-
-      <section class="suggestions-section" v-if="isSignedIn">
-        <FollowSuggestions :suggestions="suggestions"/>
-      </section>
+  <MainPageTemplate :loading="loading" :displaySidebar="true">  
+    <div class="home-create-freet card" v-if="isSignedIn">
+      <CreateFreet />
     </div>
+
+    <h2>Feed</h2>
+    <FreetsList :freets="freets" />
 
   </MainPageTemplate>
 </template>
@@ -21,7 +13,6 @@
 <script>
 import MainPageTemplate from '../components/MainPageTemplate';
 import CreateFreet from '../components/CreateFreet';
-import FollowSuggestions from '../components/FollowSuggestions';
 import FreetsList from '../components/FreetsList';
 import { eventBus } from '../main';
 import { get } from '../utils/crud-helpers';
@@ -32,14 +23,13 @@ export default {
   name: "Home",
 
   components: {
-    MainPageTemplate, CreateFreet, FreetsList, FollowSuggestions
+    MainPageTemplate, CreateFreet, FreetsList
   },
 
   data() {
     return {
       loading: true,
       freets: [],
-      suggestions: ["mufaro", "emmanuel", "makiwa"]
     }
   },
 
@@ -94,47 +84,6 @@ export default {
 </script>
 
 <style scoped>
-.home-container {
-  --sidebar-width: 260px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  position: relative;
-  align-items: flex-start;
-  justify-content: flex-end;
-}
-
-.main-section {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  align-items: flex-start;
-  justify-content: flex-start;
-}
-
-.main-section.main-padded {
-  margin-right: calc(var(--sidebar-width) + var(--page-padding));
-}
-
-.suggestions-section {
-  width: var(--sidebar-width);
-  flex-shrink: 0;
-  position: fixed;
-  top: var(--nav-bar-height);
-  padding-top: var(--page-padding);
-  bottom: 0;
-  z-index: 1;
-  overflow-y: scroll;
-   -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: 0;
-  padding-bottom: var(--page-padding);
-}
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-.suggestions-section::-webkit-scrollbar {
-  display: none;
-}
-
 .home-create-freet {
   padding: 1.5rem;
   margin-bottom: 1.5rem;

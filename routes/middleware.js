@@ -15,7 +15,7 @@ const isCurrentSessionUserExists = (req, res, next) => {
     req.session.userId = undefined;
     res.status(401).json({
       error: {
-        userNotFound: "This user no longer exists"
+        userNotFound: "This user no longer exists."
       }
     }).end();
     return;
@@ -33,7 +33,7 @@ const isUsernameSpecialKeyword = (req, res, next) => {
   if (req.body.username !== undefined && specialWords.includes(req.body.username)) {
     res.status(400).json({
       error: {
-        username: 'This is not a invalid username'
+        username: 'This is not a invalid username.'
       },
     }).end();
     return;
@@ -48,7 +48,7 @@ const isValidUsername = (req, res, next) => {
   if (req.body.username !== undefined && !usernameRegex.test(req.body.username)) {
     res.status(400).json({
       error: {
-        username: 'A username must be 6 - 50 alphanumeric characters without any spaces and cannot start with a number'
+        username: 'A username must be 6 - 50 alphanumeric characters without any spaces and cannot start with a number.'
       },
     }).end();
     return;
@@ -63,7 +63,7 @@ const isValidPassword = (req, res, next) => {
   if (req.body.password !== undefined && !passwordRegex.test(req.body.password)) {
     res.status(400).json({
       error: {
-        password: "A password must be 6 - 50 characters without any spaces"
+        password: "A password must be 6 - 50 characters without any spaces."
       },
     }).end();
     return;
@@ -77,7 +77,7 @@ const isUsernameNotExists = (req, res, next) => {
   if (req.body.username !== undefined && users.findOneByUsername(req.body.username) === undefined) {
     res.status(400).json({
       error: {
-        username: "There is no account associated with this username"
+        username: "There is no account associated with this username."
       },
     }).end();
     return;
@@ -91,7 +91,7 @@ const isUsernameInParamsNotExists = (req, res, next) => {
   if (!req.params.username) {
     res.status(400).json({
       error: {
-        username: 'You have not provided the name of the author'
+        username: 'You have not provided the name of the author.'
       },
     }).end();
     return;
@@ -99,7 +99,7 @@ const isUsernameInParamsNotExists = (req, res, next) => {
   if (users.findOneByUsername(req.params.username) === undefined) {
     res.status(400).json({
       error: {
-        username: `A user with username, ${req.params.username}, does not exist`
+        username: `A user with username, ${req.params.username}, does not exist.`
       },
     }).end();
     return;
@@ -139,7 +139,7 @@ const isUserLoggedIn = (req, res, next) => {
   if (req.session.userId === undefined) {
     res.status(403).json({
       error: {
-        auth: 'You must be logged in inorder to do this operation'
+        auth: 'You must be logged in inorder to do this operation.'
       }
     }).end();
     return;
@@ -165,7 +165,7 @@ const isValidFreetId = (req, res, next) => {
   if (freets.findOne(req.params.freetId) === undefined ) {
     res.status(400).json({
       error: {
-        freetNotFound: `A freet with freetId, ${req.params.freetId}, does not exist`
+        freetNotFound: `A freet with freetId, ${req.params.freetId}, does not exist.`
       },
     }).end();
     return;
@@ -182,14 +182,14 @@ const isValidFreetContent = (req, res, next) => {
 
   if (emptyFreetRegex.test(content)) {
     res.status(400).json({
-      error: 'A freet must not contain only white spaces',
+      error: 'A freet must not contain only white spaces.',
     }).end();
     return;
   }
 
   if (content.length > 140 || content.length < 1) {
     res.status(400).json({
-      error: `A freet must be 1 - 140 characters. Current length: ${content.length} characters`,
+      error: `A freet must be 1 - 140 characters. Current length: ${content.length} characters.`,
     }).end();
     return;
   }
@@ -202,7 +202,7 @@ const isValidFreetModifier = (req, res, next) => {
   const userId = freets.findOne(req.params.freetId).authorId;
   if (req.session.userId !== userId) {
     res.status(403).json({
-      error: "You cannot edit this freet because you are not its author"
+      error: "You cannot edit this freet because you are not its author."
     }).end();
     return;
   }
@@ -219,7 +219,7 @@ const checkFreetLikingStatus = (req, res, next, expected) => {
   if (!expected && isLiking) {
     res.status(403).json({
       error: {
-        ignoreError: "You cannot like this freet because you liked it already"
+        ignoreError: "You cannot like this freet because you liked it already."
       }
     }).end();
     return;
@@ -228,7 +228,7 @@ const checkFreetLikingStatus = (req, res, next, expected) => {
   if (expected && !isLiking) {
     res.status(403).json({
       error: {
-        ignoreError: "You cannot dislike this freet because you have not liked it"
+        ignoreError: "You cannot dislike this freet because you have not liked it."
       }
     }).end();
     return;
@@ -245,7 +245,7 @@ const checkFreetRefreetingStatus = (req, res, next, expected) => {
   if (!expected && isRefreeting) {
     res.status(403).json({
       error: {
-        ignoreError: "You cannot refreet this freet because you refreeted it already"
+        ignoreError: "You cannot refreet this freet because you refreeted it already."
       }
     }).end();
     return;
@@ -254,7 +254,7 @@ const checkFreetRefreetingStatus = (req, res, next, expected) => {
   if (expected && !isRefreeting) {
     res.status(403).json({
       error: {
-        ignoreError: "You cannot unrefreet this freet because you have not refreeted it"
+        ignoreError: "You cannot unrefreet this freet because you have not refreeted it."
       }
     }).end();
     return;
@@ -298,8 +298,8 @@ const isFollowingValid = (req, res, next) => {
   const relation = userRelations.findOne(req.session.userId, targetUser.userId);
   if (relation !== undefined) {
     const message = relation.status === "ACTIVE"
-                    ? "You cannot follow someone you have already followed"
-                    : `You have already sent a follow request to ${targetUser.username}`
+                    ? "You cannot follow someone you have already followed."
+                    : `You have already sent a follow request to ${targetUser.username}.`
 
     res.status(403).json({
       error: {
@@ -322,8 +322,8 @@ const isUnfollowingValid = (req, res, next) => {
 
   if (relation === undefined) {
     const message = req.body.isPendingRequest
-                    ? "The follow request no longer exists"
-                    : "You cannot unfollow someone you are not following"
+                    ? "The follow request no longer exists."
+                    : "You cannot unfollow someone you are not following."
     res.status(403).json({
       error: {
         ignoreError: message
@@ -373,7 +373,7 @@ const isRemovingFollowerValid = (req, res, next) => {
     if (req.body.isPendingRequest) {
       res.status(403).json({
         error: {
-          ignoreError: "This follow request no longer exists"
+          ignoreError: "This follow request no longer exists."
         }
       }).end();
       

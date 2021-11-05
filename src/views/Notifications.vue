@@ -1,5 +1,5 @@
 <template>
-  <MainPageTemplate :loading="loading">
+  <MainPageTemplate :loading="loading" :displaySidebar="true">
     <h2 class="page-title">Notifications</h2>
     <section v-if="hasRequests" class="follow-requests">
       <FollowRequest 

@@ -68,7 +68,7 @@ html {
   --button-color-hover: #0199ad;
   --button-color-disabled: #a3b8bb;
   --background-color-selected: #dfecee;
-  --max-page-width: 950px;
+  --max-page-width: 1080px;
   --nav-bar-height: 70px;
   --page-padding: 2rem;
   --input-color-hover: var(--background-color-selected);
@@ -78,14 +78,21 @@ html {
 
 body {
   height: 100vh;
+  width: 100vw;
   flex-direction: column;
   display: flex;
   margin: 0;
 }
 
+html, body {
+  position: fixed;
+  overflow: hidden;
+}
+
 .app-container {
   width: 100%;
   height: 100%;
+  overflow: scroll;
 }
 
 .card {

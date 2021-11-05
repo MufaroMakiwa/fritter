@@ -1,5 +1,5 @@
 <template>
-  <MainPageTemplate :loading="loading">
+  <MainPageTemplate :loading="loading" :displaySidebar="true">
     <ProfileHeader 
       :isAuthorExists="isAuthorExists"
       :isCurrentUser="isCurrentUser"
