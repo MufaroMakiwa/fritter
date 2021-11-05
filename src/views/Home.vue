@@ -1,7 +1,7 @@
 <template>
   <MainPageTemplate :loading="loading">
     <div class="home-container">
-      <section class="main-section">
+      <section :class="['main-section', isSignedIn ? 'main-padded' : '']">
         <div class="home-create-freet card" v-if="isSignedIn">
           <CreateFreet />
         </div>
@@ -10,7 +10,7 @@
         <FreetsList :freets="freets" />
       </section>
 
-      <section class="suggestions-section">
+      <section class="suggestions-section" v-if="isSignedIn">
         <FollowSuggestions :suggestions="suggestions"/>
       </section>
     </div>
@@ -101,7 +101,7 @@ export default {
   flex-direction: row;
   position: relative;
   align-items: flex-start;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 
 .main-section {
@@ -112,12 +112,27 @@ export default {
   justify-content: flex-start;
 }
 
+.main-section.main-padded {
+  margin-right: calc(var(--sidebar-width) + var(--page-padding));
+}
+
 .suggestions-section {
   width: var(--sidebar-width);
   flex-shrink: 0;
-  margin-left: 2rem;
-  position: sticky;
-  top: calc(var(--nav-bar-height) + var(--page-padding));
+  position: fixed;
+  top: var(--nav-bar-height);
+  padding-top: var(--page-padding);
+  bottom: 0;
+  z-index: 1;
+  overflow-y: scroll;
+   -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: 0;
+  padding-bottom: var(--page-padding);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.suggestions-section::-webkit-scrollbar {
+  display: none;
 }
 
 .home-create-freet {

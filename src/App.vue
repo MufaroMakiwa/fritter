@@ -7,6 +7,7 @@
 
 <script>
 import axios from 'axios';
+import { eventBus } from './main';
 import AlertDialog from './components/AlertDialog';
 
 export default {
@@ -16,7 +17,15 @@ export default {
     AlertDialog
   },
 
+  methods: {
+    async alertListener(message) {
+      await this.$refs.alert.open(message);
+    }
+  },
+
   created() { 
+    eventBus.$on('display-alert', this.alertListener);
+
     // intercept all axios responses and check for 401 errors when the user token is no longer valid
     axios.interceptors.response.use(
       undefined, 
@@ -40,6 +49,10 @@ export default {
         return Promise.reject(err);
       }
     )
+  },
+
+  beforeDestroy() {
+    eventBus.$off('display-alert', this.alertListener)
   }
 }
 </script>

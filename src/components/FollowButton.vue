@@ -8,8 +8,6 @@
     </button>
 
     <ConfirmDialog ref="confirm"/>
-
-    <AlertDialog ref="alert" />
   </div>
 </template>
 
@@ -17,7 +15,6 @@
 import { eventBus } from '../main';
 import { post, delete_ } from '../utils/crud-helpers';
 import ConfirmDialog from './ConfirmDialog';
-import AlertDialog from './AlertDialog';
 
 export default {
   name: "FollowButton",
@@ -34,7 +31,7 @@ export default {
   },
 
   components: {
-    ConfirmDialog, AlertDialog
+    ConfirmDialog
   },
 
   computed: {
@@ -102,7 +99,7 @@ export default {
         })
     },
 
-    async handleFollowErrors(response, toastMessage) {
+    handleFollowErrors(response, toastMessage) {
       // if the error can be ignored from the backend
       if (response.data.error.ignoreError) {
         if (toastMessage) {
@@ -119,11 +116,11 @@ export default {
       }
       // if for some reason the username is wrong
       if (response.data.error.username) {
-        await this.$refs.alert.open(response.data.error.username);
+        eventBus.$emit('display-alert', response.data.error.username);
       }
 
       if (response.data.error.relationError) {
-        await this.$refs.alert.open(response.data.error.relationError);
+        eventBus.$emit('display-alert', response.data.error.relationError);
       }
 
       // other expected errors are when user is not logged in and that is 

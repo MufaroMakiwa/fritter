@@ -66,7 +66,11 @@ const constructUserResponse = (user, currentUserId) => {
  */
  const constructRefreetResponse = (refreet) => {
   const freet = freets.findOne(refreet.freetId);
-  return constructFreetResponse(freet);
+  const constructedResponse = constructFreetResponse(freet);
+  constructedResponse.dateRefreeted = refreet.dateRefreeted;
+  constructedResponse.displayAsRefreet = true;
+  constructedResponse.refreetedBy = users.findOneByUserId(refreet.userId).username;
+  return constructedResponse;
 } 
 
 
@@ -221,13 +225,7 @@ const getFreetsAndRefreetsFromFollowers = (userId) => {
 
   // for refreets, construct the response and set displayAsRefreet to be true as well as
   // the refreeting user
-  refreetsResponse = refreetsResponse.map(refreet => {
-    const constructedResponse = constructRefreetResponse(refreet);
-    constructedResponse.displayAsRefreet = true;
-    constructedResponse.refreetedBy = users.findOneByUserId(refreet.userId).username;
-    constructedResponse.dateRefreeted = refreet.dateRefreeted;
-    return constructedResponse;
-  });
+  refreetsResponse = refreetsResponse.map(constructRefreetResponse);
 
   return mergeFreetsAndRefreets(freetsResponse, refreetsResponse);
 }

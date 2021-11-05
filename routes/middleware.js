@@ -123,7 +123,7 @@ const isUsernameAlreadyInUse = (req, res, next) => {
       if (hasError) {
         res.status(403).json({
           error: {
-            username: 'An account with this username already exists'
+            username: 'An account with this username already exists.'
           },
         }).end();
         return;
@@ -265,12 +265,25 @@ const checkFreetRefreetingStatus = (req, res, next, expected) => {
 // check if the current user is trying to add / update / delete a self
 // relation, i.e, following themselves etc
 const isSelfRelationOperation = (req, res, next) => {
-  const currentUser = users.findOneByUserId(req.session.userId);
-  if (req.body.username !== undefined && req.body.username === currentUser.username ||
-      req.params.username !== undefined && req.body.username === currentUser.username) {   
+  let isSelfRelation = false;
+
+  if (req.params.username) {
+    const paramsUser = users.findOneByUsername(req.params.username);
+    if (paramsUser !== undefined && paramsUser.userId === req.session.userId) {
+      isSelfRelation = true;
+    }
+  } else if (req.body.username) {
+    const bodyUser = users.findOneByUsername(req.body.username);
+    if (bodyUser !== undefined && bodyUser.userId === req.session.userId) {
+      isSelfRelation = true;
+    }
+  }
+ 
+
+  if (isSelfRelation) {   
     res.status(403).json({
       error: {
-        relationError: "You cannot follow or unfollow yourself"
+        relationError: "You cannot follow or unfollow yourself."
       }
     }).end();
     return;

@@ -17,16 +17,12 @@
     </div>
 
     <ConfirmDialog ref="confirm"/>
-
-    <AlertDialog ref="alert" />
-
   </div>
 </template>
 
 <script>
 import { delete_, patch } from '../utils/crud-helpers';
 import ConfirmDialog from './ConfirmDialog';
-import AlertDialog from './AlertDialog';
 import { eventBus } from '../main';
 
 
@@ -38,7 +34,7 @@ export default {
   },
 
   components: {
-    ConfirmDialog, AlertDialog
+    ConfirmDialog
   },
 
   methods: {
@@ -51,12 +47,12 @@ export default {
 
     accept() {
       patch('/api/user/followers', { username: this.request.username })
-        .then(async response => {
+        .then(response => {
           const toastMessage = `${this.request.username} now follows you`;
           if (response.isSuccess) {
             eventBus.$emit('display-toast', toastMessage);
           } else {
-            await this.handleErrors(response, toastMessage);
+            this.handleErrors(response, toastMessage);
           }
           // in both cases update the user
           this.$store.dispatch('getUser');
@@ -74,8 +70,7 @@ export default {
 
       const options = { isPendingRequest: true };
       delete_(`/api/user/followers/${this.request.username}`, options)
-        .then(async response => {
-          // this is async to await error handling
+        .then(response => {
           const requestUsername = this.request.username;
           const toastName = requestUsername.charAt(requestUsername.length - 1).toLowerCase() === "s"
                             ? `${requestUsername}'`
@@ -85,14 +80,14 @@ export default {
           if (response.isSuccess) {
             eventBus.$emit('display-toast', toastMessage);
           } else {
-            await this.handleErrors(response, toastMessage);
+            this.handleErrors(response, toastMessage);
           }
           // in both cases update the user
           this.$store.dispatch('getUser');
         })
     },
 
-    async handleErrors(response, toastMessage) {
+    handleErrors(response, toastMessage) {
       // if the error can be ignored from the backend
       if (response.data.error.ignoreError) {
         eventBus.$emit('display-toast', toastMessage);
@@ -100,11 +95,11 @@ export default {
       }
       // if for some reason the username is wrong
       if (response.data.error.username) {
-        await this.$refs.alert.open(response.data.error.username);
+        eventBus.$emit('display-alert', response.data.error.username);
       }
 
       if (response.data.error.relationError) {
-        await this.$refs.alert.open(response.data.error.relationError);
+        eventBus.$emit('display-alert', response.data.error.relationError);
       }
     }
   }

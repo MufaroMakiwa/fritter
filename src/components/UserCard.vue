@@ -22,8 +22,6 @@
     </button>
 
     <ConfirmDialog ref="confirm"/>
-
-    <AlertDialog ref="alert" />
   </div>
 </template>
 
@@ -33,7 +31,6 @@ import { eventBus } from '../main';
 import { formattedDate } from '../utils/utilities';
 import { delete_ } from '../utils/crud-helpers';
 import ConfirmDialog from './ConfirmDialog';
-import AlertDialog from './AlertDialog';
 
 
 export default {
@@ -49,7 +46,7 @@ export default {
   },
 
   components: {
-    FollowButton, ConfirmDialog, AlertDialog
+    FollowButton, ConfirmDialog
   },
   
   computed: {
@@ -83,18 +80,18 @@ export default {
 
       const options = { isPendingRequest: false };
       delete_(`/api/user/followers/${this.user.username}`, options)
-        .then(async response => {
+        .then(response => {
           const toastMessage = `${this.user.username} no longer follows you`;
           if (response.isSuccess) {
             eventBus.$emit('display-toast', toastMessage);
           } else {
-            await this.handleFollowErrors(response, toastMessage);
+            this.handleFollowErrors(response, toastMessage);
           }
           eventBus.$emit('update-profile');
         })
     },
 
-    async handleFollowErrors(response, toastMessage) {
+    handleFollowErrors(response, toastMessage) {
       // if the error can be ignored from the backend
       if (response.data.error.ignoreError) {
         eventBus.$emit('display-toast', toastMessage);
@@ -102,11 +99,11 @@ export default {
       }
       // if for some reason the username is wrong
       if (response.data.error.username) {
-        await this.$refs.alert.open(response.data.error.username);
+        eventBus.$emit('display-alert', response.data.error.username);
       }
 
       if (response.data.error.relationError) {
-        await this.$refs.alert.open(response.data.error.relationError);
+        eventBus.$emit('display-alert', response.data.error.relationError);
       }
     },
   }

@@ -4,7 +4,7 @@
       <font-awesome-icon icon="retweet" class="icon"/>
 
       <span @click="goToProfile(freet.refreetedBy)">
-        {{ refreetLabel }} refreeted this
+        {{ refreetLabel }} refreeted this {{ refreetTime }}
       </span>
     </span>
 
@@ -72,17 +72,14 @@
     </div>
 
     <ConfirmDialog ref="confirm"/>
-
-    <AlertDialog ref="alert" />
   </div>
 </template>
 
 <script>
 import FreetIcon from './FreetIcon';
 import { delete_, post } from '../utils/crud-helpers';
-import { formattedDateTime } from '../utils/utilities';
+import { formattedTimePast } from '../utils/utilities';
 import ConfirmDialog from './ConfirmDialog';
-import AlertDialog from './AlertDialog';
 import { eventBus } from '../main';
 import CreateFreet from './CreateFreet';
 
@@ -101,7 +98,7 @@ export default {
   },
 
   components: {
-    FreetIcon, CreateFreet, ConfirmDialog, AlertDialog
+    FreetIcon, CreateFreet, ConfirmDialog
   },
 
   computed: {
@@ -135,6 +132,13 @@ export default {
       }
     },
 
+    refreetTime() {
+      if (!this.isRefreet) {
+        return "";
+      }
+      return formattedTimePast(this.freet.dateRefreeted);
+    },
+
     refreets() {
       return this.freet.refreets.length;
     },
@@ -163,9 +167,9 @@ export default {
       const modified = new Date(this.freet.dateModified);
 
       if (modified.getTime() > created.getTime()) {
-        return `Modified ${formattedDateTime(this.freet.dateModified)}`;
+        return `Modified ${formattedTimePast(this.freet.dateModified)}`;
       } else {
-        return `Posted ${formattedDateTime(this.freet.dateModified)}`;
+        return `Posted ${formattedTimePast(this.freet.dateModified)}`;
       }
     },
   },
@@ -230,12 +234,12 @@ export default {
 
     toggleLike(func, toastMessage) {
       func(`/api/freets/${this.freet.freetId}/likes`)
-        .then(async response => {
+        .then(response => {
           if (response.isSuccess) {
             eventBus.$emit('display-toast', toastMessage);
 
           } else { 
-            await this.handleLikeErrors(response, toastMessage);
+            this.handleLikeErrors(response, toastMessage);
           }
           // in both cases, trigger a refresh
           eventBus.$emit('update-freets');
@@ -253,29 +257,29 @@ export default {
 
     toggleRefreet(func, toastMessage) {
       func(`/api/freets/${this.freet.freetId}/refreets`)
-        .then(async response => {
+        .then(response => {
           if (response.isSuccess) {
             eventBus.$emit('display-toast', toastMessage);
 
           } else {
-            await this.handleRefreetErrors(response, toastMessage);
+            this.handleRefreetErrors(response, toastMessage);
           }
           // in both cases, trigger a refresh
           eventBus.$emit('update-freets');
         })
     },
 
-    async handleFreetNotFound(response) {
+    handleFreetNotFound(response) {
       // this may happen when a freet in deleted in another session while the
       // user in another current session is trying to modify the same freet
       if (response.data.error.freetNotFound) {
-        await this.$refs.alert.open("Sorry, this freet has already been deleted.");
+        eventBus.$emit('display-alert', "Sorry, this freet has already been deleted.");
         return true;
       }
       return false;
     },
 
-    async handleDeleteErrors(response, toastMessage) {
+    handleDeleteErrors(response, toastMessage) {
       // if the freet is not found, the user has already deleted it. No need to 
       // display the deleted alert
       if (response.data.error.freetNotFound) {
@@ -287,8 +291,8 @@ export default {
       this.freetError = response.data.error;
     },
 
-    async handleLikeErrors(response, toastMessage) {
-      if (await this.handleFreetNotFound(response)) {
+    handleLikeErrors(response, toastMessage) {
+      if (this.handleFreetNotFound(response)) {
         return;
       }
       // this will probably happen when a user (un)likes a freet in another
@@ -301,8 +305,8 @@ export default {
       // no other like error expected
     },
 
-    async handleRefreetErrors(response, toastMessage) {
-      if (await this.handleFreetNotFound(response)) {
+    handleRefreetErrors(response, toastMessage) {
+      if (this.handleFreetNotFound(response)) {
         return;
       }
       // this will probably happen when a user (un)likes a freet in another
@@ -493,7 +497,7 @@ export default {
 .icon-container::after {
   content: attr(data-tooltip);
   position: absolute;
-  top: 200%;
+  top: 175%;
   left: -1rem;
   right: -1rem;
   margin: auto;

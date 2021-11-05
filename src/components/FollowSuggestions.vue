@@ -83,6 +83,7 @@ export default {
   transition: all 0.3s;
   cursor: pointer;
   padding: 0 1.5rem;
+  position: relative;
 }
 
 .suggestion-item .inner {
