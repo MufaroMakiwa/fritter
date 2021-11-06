@@ -1,8 +1,6 @@
 /* eslint-disable no-unused-vars */
 import Vue from 'vue';
 import VueRouter from 'vue-router'
-import cookie from "vue-cookie";
-
 import store from '../store/index';
 import Home from '../views/Home';
 import Register from '../views/Register';
@@ -124,7 +122,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.meta.requiresAuth !== undefined) { 
     if (to.meta.requiresAuth) {
-      if (!cookie.get("fritter-auth")) {
+      if (!store.getters.isSignedIn) {
         next({ name: "Login" })
 
       } else {
@@ -133,7 +131,7 @@ router.beforeEach(async (to, from, next) => {
       }
 
     } else {
-      if (cookie.get("fritter-auth")) {
+      if (store.getters.isSignedIn) {
         next({ name: "Home" })
 
       } else {

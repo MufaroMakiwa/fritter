@@ -179,23 +179,8 @@ export default {
       this.editingFreet = true;
     },
 
-    pushToProfile(author) {
-      this.$router.push({ 
-        name: "Profile",
-        params: { author: author }
-      });
-    },
-
     goToProfile(author) {
-      if (this.$route.name === "Profile") {
-        if (this.$route.params.author === author) {
-          this.$router.go();
-        } else {
-          this.pushToProfile(author);
-        }        
-      } else {
-        this.pushToProfile(author);
-      }
+      eventBus.$emit('navigate-to-profile', author);
     },
 
     stopEditingFreetListener() {

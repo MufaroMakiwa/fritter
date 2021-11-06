@@ -78,8 +78,9 @@ export default {
 }
 
 .settings-headings {
-  width: 200px;
+  width: 250px;
   flex-shrink: 0;
+  transition: all 0.3s
 }
 
 .settings-headings h3 {
@@ -115,5 +116,11 @@ export default {
 
 .settings-operations h3 {
   padding-bottom: 1rem;
+}
+
+@media screen and (max-width: 900px) {
+  .settings-headings {
+    width: 200px;
+  }
 }
 </style>

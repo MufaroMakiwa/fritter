@@ -6,6 +6,7 @@
       <div 
         v-for="suggestion in suggestions"
         :key="suggestion.username"
+        @click="goToProfile(suggestion.username)"
         class="suggestion-item">
         <div class="inner">
           <font-awesome-icon icon="user-circle" class="icon"/>
@@ -28,6 +29,7 @@
 
 <script>
 import FollowButton from '../components/FollowButton';
+import { eventBus } from '../main';
 
 export default {
   name: "FollowSuggestions",
@@ -51,6 +53,12 @@ export default {
 
     heading() {
       return this.isSignedIn ? "Suggestions" : 'Popular users';
+    }
+  },
+
+  methods: {
+    goToProfile(username) {
+      eventBus.$emit('navigate-to-profile', username);
     }
   }
 

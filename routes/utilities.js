@@ -147,7 +147,7 @@ const constructUserRelationResponse = (userRelation, currentUserId) => {
  * @return {string} - The relationship status between the two users
  */
 const getFollowingStatus = (currentUserId, targetUserId) => {
-  if (currentUserId === targetUserId) {
+  if (!currentUserId || currentUserId === targetUserId) {
     return "NONE";
   }
   const relation = userRelations.findOne(currentUserId, targetUserId);
@@ -155,6 +155,24 @@ const getFollowingStatus = (currentUserId, targetUserId) => {
     return "NONE";
   }
   return relation.status;
+}
+
+/**
+ * Check if user follows current user
+ * 
+ * @param {string} currentUserId - Id of the current user
+ * @param {string} targetUserId - Id of the target user
+ * @return {Boolean} - Whether target user follows current session user
+ */
+const isFollowingCurrentUser = (currentUserId, targetUserId) => {
+  if (!currentUserId || currentUserId === targetUserId) {
+    return false;
+  }
+  const relation = userRelations.findOne(targetUserId, currentUserId);
+  if (relation === undefined) {
+    return false;
+  }
+  return relation.status === "ACTIVE";
 }
 
 /**
@@ -278,6 +296,7 @@ module.exports = Object.freeze({
   constructUserRelationResponse,
   addPrivateInformation,
   getFreetsAndRefreetsFromFollowers,
-  getFollowSuggestions
+  getFollowSuggestions,
+  isFollowingCurrentUser
 });
 

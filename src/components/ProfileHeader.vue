@@ -3,7 +3,11 @@
     <div class="profile-details">
       <FreetIcon :size="100" :username="username" backgroundColor="white"/>
       <div class="header-main">
-        <h1>{{ username }}</h1>
+        <div class="username-container">
+          <h1>{{ username }}</h1>
+          <font-awesome-icon icon="lock" v-if="isPrivateAccount" class="icon"/>
+          <span v-if="followsCurrentUser">Follows you</span>
+        </div>
         <span class="header-user-meta" v-if="isAuthorExists">Joined {{ dateJoined }}</span>
       </div>
 
@@ -106,11 +110,14 @@ export default {
     followingStatus: {
       default: "NONE",
       type: String
+    },
+    followsCurrentUser: {
+      default: false,
+      type: Boolean
     }
   },
 
   computed: {
-
     dateJoined() {
       return this.isAuthorExists ? formattedDate(this.author.dateJoined) : '';
     },
@@ -125,6 +132,9 @@ export default {
       } else {
         return this.author.username;
       }
+    },
+    isPrivateAccount() {
+      return this.isAuthorExists && this.author.isPrivateAccount;
     }
   },
 
@@ -171,9 +181,32 @@ header .profile-details {
   color: gray
 }
 
-.header-main h1 {
+.username-container {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.username-container h1 {
   padding: 0;
-  margin: 0
+  margin: 0;
+}
+
+.username-container .icon {
+  margin-left: 0.5rem;
+  color: black;
+}
+
+.username-container span {
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.1);
+  color: black;
+  margin-left: 0.5rem;
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 0.8rem;
 }
 
 .edit-profile-button {

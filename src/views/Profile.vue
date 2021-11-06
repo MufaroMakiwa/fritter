@@ -11,7 +11,8 @@
       :followersCount="followers.length"
       :followingCount="following.length"
       :hasPrivateInformation="hasPrivateInformation"
-      :followingStatus="followingStatus"/>
+      :followingStatus="followingStatus"
+      :followsCurrentUser="followsCurrentUser"/>
 
     <div v-if="isAuthorExists" class="profile-container">
 
@@ -43,8 +44,8 @@
       </div>   
     </div>
 
-    <div v-else>
-      <h3>This account does not exist!</h3>
+    <div v-else class="not-exist">
+      <h2>This account does not exist!</h2>
       <span>Try searching for another</span>
     </div>
   </MainPageTemplate>
@@ -78,6 +79,7 @@ export default {
       isAuthorExists: false,
       activeTab: "freets",
       loading: true,
+      followsCurrentUser: false
     }
   },
 
@@ -115,6 +117,7 @@ export default {
             this.following = response.data.following;
             this.hasPrivateInformation = response.data.hasPrivateInformation;
             this.followingStatus = response.data.followingStatus;
+            this.followsCurrentUser = response.data.followsCurrentUser;
             this.isAuthorExists = true; 
 
             // if there is no private info, make sure the active tab is freets
@@ -175,11 +178,18 @@ export default {
   width: 100%;
 }
 
-h2 {
+.profile-details-section h2 {
   color: gray;
 }
 
 .profile-details-section  {
+  width: 100%;
+}
+
+.not-exist {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
 }
 

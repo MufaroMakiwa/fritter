@@ -1,5 +1,4 @@
 import Vue from "vue";
-import cookie from "vue-cookie";
 import Vuex from "vuex";
 import { get } from '../utils/crud-helpers';
 
@@ -15,11 +14,6 @@ const store = new Vuex.Store({
 
   mutations: {
     setUser(state, payload) {
-      if (payload !== null) {
-        cookie.set("fritter-auth", payload.userId);
-      } else {
-        cookie.delete("fritter-auth");
-      }
       state.user = payload;
     },
 
@@ -42,14 +36,6 @@ const store = new Vuex.Store({
 
     updateUser(state, payload) {
       state.commit("setUser", payload);
-    },
-
-    authenticateUser(state, payload) {
-      state.commit("setUser", payload);
-    },
-
-    unauthenticateUser(state) {
-      state.commit("setUser", null);
     }
   },
 

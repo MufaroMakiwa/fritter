@@ -173,7 +173,8 @@ router.post(
     followers: followers.map(relationsResponseConstructor),
     following: following.map(relationsResponseConstructor),
     hasPrivateInformation: includePrivateInfo,
-    followingStatus: utils.getFollowingStatus(req.session.userId, author.userId)
+    followingStatus: utils.getFollowingStatus(req.session.userId, author.userId),
+    followsCurrentUser: utils.isFollowingCurrentUser(req.session.userId, author.userId),
   }; 
   res.status(200).json(response).end();
 });

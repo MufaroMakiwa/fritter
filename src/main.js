@@ -1,5 +1,4 @@
 import Vue from 'vue';
-import VueCookie from 'vue-cookie';
 import App from './App';
 import router from './router/index';
 import store from './store/index';
@@ -17,13 +16,13 @@ import {
   faEdit,
   faTimes,
   faExclamationTriangle,
-  faSearch } from '@fortawesome/free-solid-svg-icons'
+  faSearch, 
+  faLock } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes, faExclamationTriangle, faSearch)
+library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes, faExclamationTriangle, faSearch, faLock)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
-Vue.use(VueCookie);
 
 Vue.config.productionTip = false;
 

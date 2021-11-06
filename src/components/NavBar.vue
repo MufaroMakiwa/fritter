@@ -85,11 +85,6 @@ export default {
   },
 
   methods: {
-    isSameProfileRoute(author) {
-      const currentAuthor = this.$route.params.author;
-      return currentAuthor !== undefined && author === currentAuthor;
-    },
-
     async signOut() {
       const dialogOptions = {
         isWarning: false,
@@ -131,19 +126,24 @@ export default {
       this.renderPage("Settings");
     },
 
-    navigate(author) {
-      if (!this.isSameProfileRoute(author)) {
-        this.$router.push({ 
-          name: "Profile",
-          params: { author }
-        });
-      } else {
-        this.$router.go();
-      }
+
+    pushToProfile(author) {
+      this.$router.push({ 
+        name: "Profile",
+        params: { author: author }
+      });
     },
 
-    goToProfile(username) { 
-      this.navigate(username);   
+    goToProfile(author) {
+      if (this.$route.name === "Profile") {
+        if (this.$route.params.author === author) {
+          this.$router.go();
+        } else {
+          this.pushToProfile(author);
+        }        
+      } else {
+        this.pushToProfile(author);
+      }
     },
 
     logIn() {
@@ -170,14 +170,14 @@ export default {
     eventBus.$on('navigate-to-profile', this.goToProfile);
     eventBus.$on('logout-menu-selected', this.signOut);
     eventBus.$on('navigate-to-settings', this.goToSettings);
-    eventBus.$on('search-query', this.navigate);
+    eventBus.$on('search-query', this.goToProfile);
   },
 
   beforeDestroy() {
     eventBus.$off('navigate-to-profile', this.goToProfile);
     eventBus.$off('logout-menu-selected', this.signOut);
     eventBus.$off('navigate-to-settings', this.goToSettings);
-    eventBus.$off('search-query', this.navigate);
+    eventBus.$off('search-query', this.goToProfile);
   }
 }
 </script>
