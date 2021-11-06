@@ -82,11 +82,6 @@ export default {
   padding: 1.5rem;
 }
 
-.confirm-container h3 {
-  padding: 0;
-  margin: 0;
-}
-
 .confirm-container span {
   color: gray;
   width: 100%;

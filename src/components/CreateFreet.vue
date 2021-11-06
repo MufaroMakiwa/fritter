@@ -229,7 +229,7 @@ textarea {
   height: 80px;
   font-family: inherit;
   flex-grow: 1;
-  font-size: 0.9rem
+  font-size: 1rem;
 }
 
 .freet-submit-container {

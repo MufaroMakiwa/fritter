@@ -4,7 +4,7 @@
       <CreateFreet />
     </div>
 
-    <h2>Feed</h2>
+    <h2 class="section-title">Feed</h2>
     <FreetsList :freets="freets" />
 
   </MainPageTemplate>
@@ -86,10 +86,7 @@ export default {
 <style scoped>
 .home-create-freet {
   padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--page-padding);
 }
 
-h2 {
-  color: gray;
-}
 </style>

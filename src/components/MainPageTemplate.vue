@@ -112,7 +112,6 @@ main {
 
 .main-section.padded {
   margin-right: var(--page-padding);
-  /* margin-right: calc(var(--sidebar-width) + var(--page-padding)); */
 }
 
 .suggestions-section {
@@ -121,22 +120,7 @@ main {
   position: sticky;
   top: calc(var(--nav-bar-height) +  var(--page-padding));
   bottom: 0;
-
-  /* position: fixed;
-  top: var(--nav-bar-height);
-  padding-top: var(--page-padding);
-  bottom: 0;
-  z-index: 1;
-  overflow-y: scroll;
-   -ms-overflow-style: none; 
-  scrollbar-width: 0;
-  padding-bottom: var(--page-padding); */
 }
-
-/* Hide scrollbar for Chrome, Safari and Opera */
-/* .suggestions-section::-webkit-scrollbar {
-  display: none;
-} */
 
 .loader-container {
   display: flex;

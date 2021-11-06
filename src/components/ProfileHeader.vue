@@ -4,7 +4,7 @@
       <FreetIcon :size="100" :username="username" backgroundColor="white"/>
       <div class="header-main">
         <div class="username-container">
-          <h1>{{ username }}</h1>
+          <h2>{{ username }}</h2>
           <font-awesome-icon icon="lock" v-if="isPrivateAccount" class="icon"/>
           <span v-if="followsCurrentUser">Follows you</span>
         </div>
@@ -155,7 +155,7 @@ header {
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--page-padding);
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
@@ -187,11 +187,6 @@ header .profile-details {
   width: 100%;
   justify-content: flex-start;
   align-items: center;
-}
-
-.username-container h1 {
-  padding: 0;
-  margin: 0;
 }
 
 .username-container .icon {

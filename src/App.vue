@@ -143,6 +143,16 @@ span, p {
   word-break: break-all;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  padding: 0;
+}
+
+.section-title {
+  margin-bottom: 1.5rem;
+  color: gray;
+}
+
 .input-error {
   color: red;
   width: 100%;

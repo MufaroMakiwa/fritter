@@ -1,6 +1,6 @@
 <template>
   <MainPageTemplate :loading="loading" :displaySidebar="true">
-    <h2 class="page-title">Notifications</h2>
+    <h2 class="section-title">Notifications</h2>
     <section v-if="hasRequests" class="follow-requests">
       <FollowRequest 
         v-for="(request, index) in requestsReceived"
@@ -50,15 +50,11 @@ export default {
 </script>
 
 <style scoped>
-.page-title {
-  color: gray;
-  margin-bottom: 1.5rem;
-}
-
 .follow-requests {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  width: 100%;
 }
 </style>

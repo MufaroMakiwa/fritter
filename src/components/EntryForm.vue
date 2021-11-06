@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="authenticateUser" class="card">
-    <h2>{{ title }}</h2>
+    <h2 class="section-title">{{ title }}</h2>
 
     <span v-if="hasEntryError" class="input-error">{{ entryError }}</span>
     
@@ -138,8 +138,7 @@ form {
 }
 
 h2 {
-  margin-top: 0;
-  margin-bottom: 1.5rem;
+  color: black;
 }
 
 input[type="submit"] {

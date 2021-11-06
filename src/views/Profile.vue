@@ -15,9 +15,8 @@
       :followsCurrentUser="followsCurrentUser"/>
 
     <div v-if="isAuthorExists" class="profile-container">
-
       <div class="profile-details-section">
-        <h2>{{ sectionTitle }}</h2>
+        <h2 class="section-title">{{ sectionTitle }}</h2>
         <FreetsList 
           v-if="activeTab === 'freets'"
           :freets="freets"/>
@@ -39,13 +38,12 @@
         <UsersList 
           v-if="activeTab === 'following'"
           :users="following"
-          emptyMessage="You are currently not following anyone!"/>
-        
+          emptyMessage="You are currently not following anyone!"/>    
       </div>   
     </div>
 
     <div v-else class="not-exist">
-      <h2>This account does not exist!</h2>
+      <h2 class="section-title">This account does not exist!</h2>
       <span>Try searching for another</span>
     </div>
   </MainPageTemplate>
@@ -176,10 +174,6 @@ export default {
 <style scoped>
 .profile-container {
   width: 100%;
-}
-
-.profile-details-section h2 {
-  color: gray;
 }
 
 .profile-details-section  {

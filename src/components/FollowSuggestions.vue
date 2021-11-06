@@ -76,7 +76,6 @@ export default {
 
 .container h4 {
   padding: 1rem 1.5rem;
-  margin: 0;
   color: gray;
   width: 100%;
   text-align: left;
