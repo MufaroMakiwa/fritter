@@ -41,6 +41,7 @@ export default {
       toast: {
         isDisplayed: false,
         message: "",
+        timeout: null
       },
     }
   },
@@ -59,11 +60,14 @@ export default {
 
   methods: {
     displayToastListener(message) {
+      // clear the previous toast timeout
+      clearTimeout(this.toast.timeout);
+
       // display the toast
-      this.toast = { isDisplayed: true, message: message };
+      this.toast = { ...this.toast, isDisplayed: true, message: message };
       
       // hide toast after 2 seconds
-      setTimeout(() => {
+      this.toast.timeout = setTimeout(() => {
         this.toast = { isDisplayed: false, message: "" };
       }, 2000);
     },

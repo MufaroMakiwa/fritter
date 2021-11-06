@@ -168,8 +168,8 @@ router.post(
   const response = {
     author: utils.constructUserResponse(author),
     freets: authorFreets.map(utils.constructFreetResponse),
-    refreets: authorRefreets.map(utils.constructRefreetResponse),
-    likes: authorLikes.map(utils.constructLikeResponse),
+    refreets: authorRefreets.map(refreet => utils.constructRefreetResponse(refreet)),
+    likes: authorLikes.map(like => utils.constructLikeResponse(like)),
     followers: followers.map(relationsResponseConstructor),
     following: following.map(relationsResponseConstructor),
     hasPrivateInformation: includePrivateInfo,

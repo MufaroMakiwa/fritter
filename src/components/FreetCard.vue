@@ -136,7 +136,7 @@ export default {
       if (!this.isRefreet) {
         return "";
       }
-      return formattedTimePast(this.freet.dateRefreeted);
+      return formattedTimePast(this.freet.dateAdded);
     },
 
     refreets() {

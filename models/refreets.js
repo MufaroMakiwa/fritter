@@ -7,8 +7,10 @@ let data = [];
  * @typedef Refreet
  * @prop {string} refreetId - The unique id of the refreet
  * @prop {string} userId - Id of refreeting user
+ * @prop {string} authorId - The id of the author of the freet
+ * @prop {string} status - NEW, SEEN, OPENED. NEW at created, SEEN when notif loaded, OPENED when clicked
  * @prop {string} freetId - The id of the freet refreeted
- * @prop {Date} dateRefreeted - The date the user refreetedd the freet 
+ * @prop {Date} dateAdded - The date the user refreeted the freet 
  */
 
 /**
@@ -20,7 +22,7 @@ let data = [];
 class Refreets {
 
   /**
-   * Filter data and return sorted by dateRefreeted
+   * Filter data and return sorted by dateAdded
    * 
    * @param {Function} func - The filter function to use
    * @return {Refreet[]} - Return the filtered data sorted
@@ -28,8 +30,8 @@ class Refreets {
   static filter(func) {
     return helpers.orderObjectsBy(
       data.filter(func),
-      ['dateRefreeted'],
-      'dateRefreeted',
+      ['dateAdded'],
+      'dateAdded',
       'DESC'
     )
   }
@@ -53,12 +55,14 @@ class Refreets {
    * @param {string} userId - The id of the refreeting user
    * @return {Refreet} - The newly created refreet object
    */
-   static refreetOne(freetId, userId) {
+   static refreetOne(freetId, userId, authorId) {
     const refreet = {
       refreetId: uuidv4(),
       freetId: freetId,
       userId: userId,
-      dateRefreeted: new Date(),
+      authorId: authorId,
+      dateAdded: new Date(),
+      status: userId === authorId ? "OPENED" : "NEW"
     };
     data.push(refreet);
     return refreet;
@@ -133,6 +137,27 @@ class Refreets {
    */
   static getAllRefreetsByUsers(userIds) {
     return Refreets.filter(refreet => userIds.includes(refreet.userId));
+  }
+
+  /**
+   * Get refreets for the given user's freets
+   * 
+   * @param {string} userId - Id of the user
+   * @param {Boolean} includeAuthorRefreets - Whether to include the author's refreets
+   * @return {Refreet[]} - An array of refreets
+   */
+  static getAllRefreetsForUser(userId, includeAuthorRefreets = false) {
+    return Refreets.filter(refreet => {
+      if (refreet.authorId !== userId) {
+        return false;
+      }
+
+      if (!includeAuthorRefreets && refreet.userId === userId) {
+        return false;
+      }
+
+      return true;
+    })
   }
 }
 

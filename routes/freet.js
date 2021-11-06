@@ -119,7 +119,8 @@ router.post(
     (req, res, next) => validator.checkFreetLikingStatus(req, res, next, false),
   ],
   (req, res) => {
-    const userId = likes.likeOne(req.params.freetId, req.session.userId);
+    const authorId = freets.findOne(req.params.freetId).authorId;
+    const userId = likes.likeOne(req.params.freetId, req.session.userId, authorId);
     res.status(201).json({
       message: 'Your like was updated successfully.', 
       username: utils.getUsername(userId)
@@ -163,12 +164,13 @@ router.post(
 
   ],
   (req, res) => {
-    const refreetResponse = refreets.refreetOne(req.params.freetId, req.session.userId);
+    const authorId = freets.findOne(req.params.freetId).authorId;
+    const refreetResponse = refreets.refreetOne(req.params.freetId, req.session.userId, authorId);
     res.status(201).json({
       message: 'Your refreet was updated successfully.', 
       refreet: { 
         username: utils.getUsername(refreetResponse.userId),
-        dateRefreeted: refreetResponse.dateRefreeted
+        dateAdded: refreetResponse.dateAdded
       }
     }).end();
 });

@@ -59,6 +59,15 @@ export default {
           };
       }
     },
+
+    firesEvent() {
+      const routeName = this.$route.name;
+      return routeName === "Home" || routeName === "Profile";
+    },
+
+    event() {
+      return this.$route.name === "Profile" ? 'update-profile' : 'update-freets'
+    }
   },
 
   methods: {
@@ -77,7 +86,7 @@ export default {
           }
           // in both cases, update the user's profile and user obj
           this.$store.dispatch("getUser");
-          eventBus.$emit('update-profile');
+          this.firesEvent && eventBus.$emit(this.event);
         })
     },
 

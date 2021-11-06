@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+const helpers = require('./helpers');
 let data = [];
 
 
@@ -6,8 +7,10 @@ let data = [];
  * @typedef Like
  * @prop {string} likeId - The unique id of the like
  * @prop {string} userId - Id of liking user
+ * @prop {string} authorId - The id of the author of the freet
+ * @prop {string} status - NEW, SEEN, OPENED. NEW at created, SEEN when notif loaded, OPENED when clicked
  * @prop {string} freetId - The id of the freet liked
- * @prop {Date} dateLiked - The date the user liked the freet (may be used for notifs)
+ * @prop {Date} dateAdded - The date the user liked the freet (may be used for notifs)
  */
 
 
@@ -18,6 +21,21 @@ let data = [];
  */
 
 class Likes {
+
+  /**
+   * Filter data and return sorted by dateAdded
+   * 
+   * @param {Function} func - The filter function to use
+   * @return {Like[]} - Return the filtered data sorted
+   */
+   static filter(func) {
+    return helpers.orderObjectsBy(
+      data.filter(func),
+      ['dateAdded'],
+      'dateAdded',
+      'DESC'
+    )
+  }
 
   /**
    * Check if a user has already liked a freet
@@ -37,14 +55,17 @@ class Likes {
    * 
    * @param {string} freetId - The id of the freet to like
    * @param {string} userId - The id of the liking user
+   * @param {string} authorId - The id of the author of the freet
    * @return {UserId} - The id of the liking user
    */
-  static likeOne(freetId, userId) {
+  static likeOne(freetId, userId, authorId) {
     const like = {
       likeId: uuidv4(),
       freetId: freetId,
       userId: userId,
-      dateLiked: new Date(),
+      authorId: authorId,
+      dateAdded: new Date(),
+      status: userId === authorId ? "OPENED" : "NEW"
     };
     data.push(like);
     return userId;
@@ -89,9 +110,7 @@ class Likes {
    * @return {freetId[]} - An array of freetIds
    */
   static getAllLikesByUserId(userId) {
-    return data
-            .filter(like => like.userId === userId)
-            .map(like => like.freetId);
+    return Likes.filter(like => like.userId === userId);     
   }
 
   /**
@@ -104,6 +123,27 @@ class Likes {
     return data
             .filter(like => like.freetId === freetId)
             .map(like => like.userId);
+  }
+
+  /**
+   * Get likes for the given user' freets
+   * 
+   * @param {string} userId - Id of the user
+   * @param {Boolean} includeAuthorLikes - Whether to include the author's likes
+   * @return {Like[]} - An array of likes
+   */
+   static getAllLikesForUser(userId, includeAuthorLikes = false) {
+    return Likes.filter(like => {
+      if (like.authorId !== userId) {
+        return false;
+      }
+
+      if (!includeAuthorLikes && like.userId === userId) {
+        return false;
+      }
+
+      return true;
+    })
   }
 }
 

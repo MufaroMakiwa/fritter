@@ -131,6 +131,8 @@ export default {
     },
 
     freetModifiedListener() {
+      // when a freet is modified, ping the db to get author details in case
+      // there were any changes to the user profile and freets
       this.getAuthorDetails();
     },
 
@@ -153,8 +155,6 @@ export default {
     // need to render page differently when it is for the current user
     this.getAuthorDetails();
 
-    // when a freet is modified, ping the db to get author details in case
-    // there were any changes to the user profile and freets
     eventBus.$on('update-freets', this.freetModifiedListener);
     eventBus.$on('set-active-tab', this.activeTabListener);
 

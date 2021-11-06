@@ -81,7 +81,7 @@ const constructFreetResponse = (freet) => {
 const constructUserResponse = (user, currentUserId) => {
   const isCurrentUser = currentUserId !== undefined && currentUserId === user.userId;
   const requests = isCurrentUser ? userRelations.getAllRequestsReceived(user.userId) : [];
-  const requestsResponse = requests.map(request => constructUserRelationResponse(request, currentUserId))
+  const requestsResponse = requests.map(request => constructUserRelationResponse(request, currentUserId));
 
   return { 
     userId: user.userId, 
@@ -89,6 +89,7 @@ const constructUserResponse = (user, currentUserId) => {
     dateJoined: user.dateJoined,
     isPrivateAccount: user.isPrivateAccount,
     ...(isCurrentUser && { requestsReceived: requestsResponse }),
+    ...(isCurrentUser && { notifications: getNotifications(currentUserId) }),
   };
 }
 
@@ -96,14 +97,19 @@ const constructUserResponse = (user, currentUserId) => {
 /**
  * Get a freet object given the refreet object
  * 
- * @param {Refreet} refreet - A refreet 
+ * @param {Refreet} refreet - A refreet object
+ * @param {Boolean} includeStatus - Whether to include the like status
  * @returns {Freet} - A freet object with with all details
  */
- const constructRefreetResponse = (refreet) => {
+ const constructRefreetResponse = (refreet, includeStatus = false) => {
   const freet = freets.findOne(refreet.freetId);
   const constructedResponse = constructFreetResponse(freet);
-  constructedResponse.dateRefreeted = refreet.dateRefreeted;
-  constructedResponse.displayAsRefreet = true;
+  constructedResponse.dateAdded = refreet.dateAdded;
+
+  // if include status is true, we do not want to display the refreet tag
+  // because this will be for the notications
+  constructedResponse.displayAsRefreet = !includeStatus;
+  includeStatus && (constructedResponse.status = refreet.status);
   constructedResponse.refreetedBy = users.findOneByUserId(refreet.userId).username;
   return constructedResponse;
 } 
@@ -112,12 +118,17 @@ const constructUserResponse = (user, currentUserId) => {
 /**
  * Get a freet object given the liking object
  * 
- * @param {string} freetId - A freetId
+ * @param {Like} like - A like object
+ * @param {Boolean} includeStatus - Whether to include the like status
  * @returns {Freet} - A freet object with all details
  */
- const constructLikeResponse = (freetId) => {
-  const freet = freets.findOne(freetId);
-  return constructFreetResponse(freet);
+ const constructLikeResponse = (like, includeStatus = false) => {
+  const freet = freets.findOne(like.freetId);
+  const constructedResponse = constructFreetResponse(freet);
+  constructedResponse.dateAdded = like.dateAdded;
+  includeStatus && (constructedResponse.status = like.status);
+  constructedResponse.likedBy = users.findOneByUserId(like.userId).username;
+  return constructedResponse;
 } 
 
 /**
@@ -210,7 +221,7 @@ const addPrivateInformation = (currentUserId, targetUserId) => {
 
 
 // Given freets and refreets response, merge then to be in descending order of 
-// dateModified of freets and dateRefreeted for refreets
+// dateModified of freets and dateAdded for refreets
 const mergeFreetsAndRefreets = (freetsResponse, refreetsResponse) => {
   let mergedResponse = [];
 
@@ -221,7 +232,7 @@ const mergeFreetsAndRefreets = (freetsResponse, refreetsResponse) => {
     let currentFreet = freetsResponse[freetsIndex];
     let currentRefreet = refreetsResponse[refreetsIndex];
 
-    if (currentFreet.dateModified.getTime() > currentRefreet.dateRefreeted.getTime()) {
+    if (currentFreet.dateModified.getTime() > currentRefreet.dateAdded.getTime()) {
       mergedResponse.push(currentFreet);
       freetsIndex++;
 
@@ -278,11 +289,37 @@ const getFreetsAndRefreetsFromFollowers = (userId) => {
 
   // for refreets, construct the response and set displayAsRefreet to be true as well as
   // the refreeting user
-  refreetsResponse = refreetsResponse.map(constructRefreetResponse);
-
+  refreetsResponse = refreetsResponse.map(refreet => constructRefreetResponse(refreet));
   return mergeFreetsAndRefreets(freetsResponse, refreetsResponse);
 }
 
+/**
+ * Get all notifications
+ * 
+ * @param {string} currentUserId - Id of the current user
+ * @return {Object[]} - A list of all the notifications sorted in dateAdded
+ */
+const getNotifications = (currentUserId) => {
+  // get follow requests for user
+  const requests = userRelations.getAllRequestsReceived(currentUserId);
+  const requestsResponse = requests.map(request => constructUserRelationResponse(request, currentUserId));
+
+  // get the refreets for the user
+  const userRefreets = refreets.getAllRefreetsForUser(currentUserId);
+  const refreetsResponse = userRefreets.map(refreet => constructRefreetResponse(refreet, true));
+
+  // get the likes for the user
+  const userLikes = likes.getAllLikesForUser(currentUserId);
+  const likesResponse = userLikes.map(like => constructLikeResponse(like, true))
+  // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+  // console.log("Refreets: ", refreetsResponse);
+  // console.log("Likes: ", likesResponse);
+  // console.log("Requests: ", requestsResponse);
+  // console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+  return requestsResponse
+            .concat(refreetsResponse, likesResponse)
+            .sort((a, b) => a['dateAdded'].getTime() > b['dateAdded'].getTime() ? -1 : 1)
+}
 
 
 
@@ -297,6 +334,7 @@ module.exports = Object.freeze({
   addPrivateInformation,
   getFreetsAndRefreetsFromFollowers,
   getFollowSuggestions,
-  isFollowingCurrentUser
+  isFollowingCurrentUser,
+  getNotifications
 });
 
