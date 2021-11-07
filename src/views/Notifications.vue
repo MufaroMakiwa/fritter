@@ -1,11 +1,11 @@
 <template>
   <MainPageTemplate :loading="loading" :displaySidebar="true">
     <h2 class="section-title">Notifications</h2>
-    <section v-if="hasRequests" class="follow-requests">
-      <FollowRequest 
-        v-for="(request, index) in requestsReceived"
+    <section v-if="hasNotifications" class="follow-requests">
+      <NotificationCard 
+        v-for="(notification, index) in notifications"
         :key="index"
-        :request="request"/>
+        :notification="notification"/>
     </section>
 
     <span v-else>You do not have any notifications</span>
@@ -14,13 +14,14 @@
 
 <script>
 import MainPageTemplate from '../components/MainPageTemplate';
-import FollowRequest from '../components/FollowRequest';
+import NotificationCard from '../components/NotificationCard';
+import { patch } from '../utils/crud-helpers';
 
 export default {
   name: "Notifications",
 
   components: {
-    MainPageTemplate, FollowRequest
+    MainPageTemplate, NotificationCard
   },
 
   data() {
@@ -34,18 +35,29 @@ export default {
       return this.$store.getters.isSignedIn;
     },
 
-    requestsReceived() {
-      return this.isSignedIn ? this.$store.getters.user.requestsReceived : [];
+    notifications() {
+      return this.isSignedIn ? this.$store.getters.user.notifications : [];
     },
 
-    hasRequests() {
-      return this.requestsReceived.length > 0;
+    hasNotifications() {
+      return this.notifications.length > 0;
     }
   },
 
-  mounted() {
+  created() {
+    // update all like and refreet notifications as seen
+    // patch('/api/user/notifications')
+    //   .then(response => {
+    //     if (response.isSuccess) {
+    //       this.$store.dispatch('updateNotifications', response.data.notifications);
+    //       this.loading = false;
+    //     } else {
+    //       // the only expected error is when the user is not logged in which is
+    //       // handled in App.vue
+    //     }
+    //   });
     this.loading = false;
-  }
+  },
 }
 </script>
 

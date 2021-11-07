@@ -8,7 +8,7 @@ let data = [];
  * @prop {string} likeId - The unique id of the like
  * @prop {string} userId - Id of liking user
  * @prop {string} authorId - The id of the author of the freet
- * @prop {string} status - NEW, SEEN, OPENED. NEW at created, SEEN when notif loaded, OPENED when clicked
+ * @prop {string} notificationStatus - NEW, SEEN, OPENED. NEW at created, SEEN when notif loaded, OPENED when clicked
  * @prop {string} freetId - The id of the freet liked
  * @prop {Date} dateAdded - The date the user liked the freet (may be used for notifs)
  */
@@ -65,7 +65,7 @@ class Likes {
       userId: userId,
       authorId: authorId,
       dateAdded: new Date(),
-      status: userId === authorId ? "OPENED" : "NEW"
+      notificationStatus: userId === authorId ? "OPENED" : "NEW"
     };
     data.push(like);
     return userId;
@@ -130,9 +130,10 @@ class Likes {
    * 
    * @param {string} userId - Id of the user
    * @param {Boolean} includeAuthorLikes - Whether to include the author's likes
+   * @param {Boolean} markAsSeen - Whether to mark the likes as seen while filtering
    * @return {Like[]} - An array of likes
    */
-   static getAllLikesForUser(userId, includeAuthorLikes = false) {
+   static getAllLikesForUser(userId, includeAuthorLikes, markAsSeen) {
     return Likes.filter(like => {
       if (like.authorId !== userId) {
         return false;
@@ -142,6 +143,7 @@ class Likes {
         return false;
       }
 
+      markAsSeen && like.notificationStatus === "NEW" && (like.notificationStatus = "SEEN");
       return true;
     })
   }

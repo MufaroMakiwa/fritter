@@ -11,15 +11,31 @@ export default {
 
   computed: {
     label() {
-      return this.requestsReceived > 99 ? "99+" : this.requestsReceived;
+      return this.notifications > 99 ? "99+" : this.notifications;
     },
 
     hasLabel() {
-      return this.requestsReceived > 0;
+      return this.notifications > 0;
     },
 
-    requestsReceived() {
-      return this.$store.getters.user.requestsReceived.length;
+    notifications() {
+      const notifications = this.$store.getters.user.notifications;
+      let count = 0;
+
+      notifications.forEach(notification => {
+        // if it is a like or refreet notification, check its status and update count
+        if (notification.refreetDetails !== undefined) {
+          notification.refreetDetails.notificationStatus === "NEW" && count++
+
+        } else if (notification.likeDetails !== undefined) {
+          notification.likeDetails.notificationStatus === "NEW" && count++
+
+        } else {
+          // else it is a follow request
+          count ++
+        }
+      });
+      return count;
     }
   }
 }
@@ -43,6 +59,6 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: row;
-  font-size: 12px;
+  font-size: 0.9rem;
 }
 </style>

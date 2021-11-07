@@ -9,6 +9,7 @@ let data = [];
  * @prop {string} followerId - userId of following user
  * @prop {string} targetUserId - ID of user being followed
  * @prop {string} status - Status of the relation: ACTIVE or PENDING
+ * @prop {string} notificationStatus - NEW, SEEN, OPENED, HIDDEN: whether the user has seen the notification
  * @prop {Date} dateAdded - The date that the user relation was made
  */
 
@@ -107,9 +108,10 @@ class UserRelations {
       targetUserId: targetUserId,
       status: status,
       dateAdded: dateAdded,
+      notificationStatus: "NEW"
     }
     data.push(relation);
-    return { userId: targetUserId, dateAdded, status };
+    return { userId: targetUserId, dateAdded, status, notificationStatus: "NEW" };
   }
 
   /**
@@ -122,11 +124,13 @@ class UserRelations {
   static acceptFollowRequest(followerId, targetUserId) {
     const relation = UserRelations.findOne(followerId, targetUserId);
     relation.status = "ACTIVE";
+    relation.notificationStatus = "HIDDEN";
     
     return {
       userId: relation.followerId,
       dateAdded: relation.dateAdded,
-      status: relation.status
+      status: relation.status,
+      notificationStatus: relation.notificationStatus
     } 
   }
 
@@ -177,7 +181,8 @@ class UserRelations {
               return {
                 userId: relation.followerId,
                 dateAdded: relation.dateAdded,
-                status: relation.status
+                status: relation.status,
+                notificationStatus: relation.notificationStatus
               }
             });
   }
@@ -196,7 +201,8 @@ class UserRelations {
               return {
                 userId: relation.targetUserId,
                 dateAdded: relation.dateAdded,
-                status: relation.status
+                status: relation.status,
+                notificationStatus: relation.notificationStatus
               }
             });
   }
@@ -215,7 +221,8 @@ class UserRelations {
               return {
                 userId: relation.targetUserId,
                 dateAdded: relation.dateAdded,
-                status: relation.status
+                status: relation.status,
+                notificationStatus: relation.notificationStatus
               }
             });
   }
@@ -233,7 +240,8 @@ class UserRelations {
               return {
                 userId: relation.followerId,
                 dateAdded: relation.dateAdded,
-                status: relation.status
+                status: relation.status,
+                notificationStatus: relation.notificationStatus
               }
             });
   }
@@ -247,6 +255,7 @@ class UserRelations {
     data = data.map(relation => {
       if (relation.targetUserId === userId && relation.status === "PENDING") {
         relation.status = "ACTIVE";
+        relation.notificationStatus = "HIDDEN";
       }
       return relation;
     });

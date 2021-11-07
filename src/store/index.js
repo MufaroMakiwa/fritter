@@ -19,16 +19,19 @@ const store = new Vuex.Store({
 
     setSuggestions(state, payload) {
       state.suggestions = payload;
+    },
+
+    updateNotifications(state, payload) {
+      if (state.user !== null) {
+        state.user.notifications = payload;
+      }
     }
   },
 
   actions: {
     async getUser(state) {
       const response = await get('/api/user/session');
-      if (response.isSuccess) {
-        if (response.data.user !== null) {
-          console.log(JSON.stringify(response.data.user.notifications, null, 4));
-        }      
+      if (response.isSuccess) {   
         state.commit("setUser", response.data.user);
         state.commit("setSuggestions", response.data.suggestions);
 
@@ -39,6 +42,10 @@ const store = new Vuex.Store({
 
     updateUser(state, payload) {
       state.commit("setUser", payload);
+    },
+
+    updateNotifications(state, payload) {
+      state.commit("updateNotifications", payload)
     }
   },
 

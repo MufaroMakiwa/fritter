@@ -254,7 +254,7 @@ router.delete('/', [ validator.isUserLoggedIn ], (req, res) => {
 /**
  * Follow a user or create a follow request
  * 
- * @name POST /user/followinf
+ * @name POST /user/following
  * 
  * @param {string} username - username of user to follow 
  * @return {UserRelation} - the created user relation
@@ -314,6 +314,17 @@ router.delete(
 });
 
 
+/**
+ * Accept a follow request
+ * 
+ * @name PATCH /user/followers
+ * 
+ * @param {string} username - username of user whose follow to accept 
+ * @return {UserRelation} - the created user relation
+ * @throws {403} - if user is already logged in is trying to accept own request
+ *                 and when user is trying to accept non existent request
+ * @throws {400} - if username given is not valid
+ */
 router.patch(
   '/followers',
   [
@@ -332,6 +343,17 @@ router.patch(
 });
 
 
+/**
+ * Remove follower or decline follow request.
+ * 
+ * @name DELETE /user/followers/:username
+ * 
+ * @return {string} - a success message
+ * @throws {403} - if the user is not logged in, is trying to decline own request,
+ *                 when user is trying to remove someone who does not follow them
+ *                 or someone who has not sent a follow request to them
+ * @throws {400} - If the username given is not valid
+ */
 router.delete(
   '/followers/:username?',
   [
@@ -349,5 +371,25 @@ router.delete(
     res.status(200).json({ message }).end();
 });
 
+
+/**
+ * Mark user notifications as seen
+ * 
+ * @name PATCH /user/notifications
+ * 
+ * @return {string} - a success message
+ * @throws {403} - if the user is not logged in
+ */
+router.patch(
+  '/notifications',
+  [
+    validator.isUserLoggedIn
+  ],
+  (req, res) => {
+    const updatedNotifications = utils.getNotifications(req.session.userId, true);
+    res.status(200).json({
+      notifications: updatedNotifications 
+    }).end();
+});
 
 module.exports = router;

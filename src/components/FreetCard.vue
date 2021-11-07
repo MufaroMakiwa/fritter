@@ -124,11 +124,11 @@ export default {
         return '';
       }
 
-      if (this.isSignedIn && this.user.username === this.freet.refreetedBy) {
+      if (this.isSignedIn && this.user.username === this.freet.refreetDetails.refreetedBy) {
         return "You";
 
       } else {
-        return this.freet.refreetedBy;
+        return this.freet.refreetDetails.refreetedBy;
       }
     },
 
@@ -136,7 +136,7 @@ export default {
       if (!this.isRefreet) {
         return "";
       }
-      return formattedTimePast(this.freet.dateAdded);
+      return formattedTimePast(this.freet.refreetDetails.dateAdded);
     },
 
     refreets() {

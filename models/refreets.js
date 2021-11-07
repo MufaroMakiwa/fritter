@@ -8,7 +8,7 @@ let data = [];
  * @prop {string} refreetId - The unique id of the refreet
  * @prop {string} userId - Id of refreeting user
  * @prop {string} authorId - The id of the author of the freet
- * @prop {string} status - NEW, SEEN, OPENED. NEW at created, SEEN when notif loaded, OPENED when clicked
+ * @prop {string} notificationStatus - NEW, SEEN, OPENED. NEW at created, SEEN when notif loaded, OPENED when clicked
  * @prop {string} freetId - The id of the freet refreeted
  * @prop {Date} dateAdded - The date the user refreeted the freet 
  */
@@ -62,7 +62,7 @@ class Refreets {
       userId: userId,
       authorId: authorId,
       dateAdded: new Date(),
-      status: userId === authorId ? "OPENED" : "NEW"
+      notificationStatus: userId === authorId ? "OPENED" : "NEW"
     };
     data.push(refreet);
     return refreet;
@@ -144,9 +144,10 @@ class Refreets {
    * 
    * @param {string} userId - Id of the user
    * @param {Boolean} includeAuthorRefreets - Whether to include the author's refreets
+   * @param {Boolean} markAsSeen - Whether to mark the refreets as seen while filtering
    * @return {Refreet[]} - An array of refreets
    */
-  static getAllRefreetsForUser(userId, includeAuthorRefreets = false) {
+  static getAllRefreetsForUser(userId, includeAuthorRefreets, markAsSeen) {
     return Refreets.filter(refreet => {
       if (refreet.authorId !== userId) {
         return false;
@@ -156,6 +157,7 @@ class Refreets {
         return false;
       }
 
+      markAsSeen && refreet.notificationStatus === "NEW" && (refreet.notificationStatus = "SEEN");
       return true;
     })
   }
