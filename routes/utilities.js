@@ -141,10 +141,22 @@ const constructUserResponse = (user, currentUserId) => {
  * Get a more readable user relation object
  * 
  * @param {UserRelation} userRelation - The userRelation
+ * @param {string} currentUserId - User id of the current user
+ * @param {BOolean} includeNotificationStatus - Whether to inlcude the notification status
  * @return {UserRelation} - A user relation object with the username not id
  */
 const constructUserRelationResponse = (userRelation, currentUserId, includeNotificationStatus = false) => {
   const user = users.findOneByUserId(userRelation.userId);
+
+  // Get the notification status which is either for the target or follower
+  const getNotificationStatus = () => {
+    if (userRelation.targetNotificationStatus === "NONE") {
+      return userRelation.followerNotificationStatus;
+
+    } else {
+      return userRelation.targetNotificationStatus;
+    }
+  }
 
   return {
     username: user.username,
@@ -152,7 +164,8 @@ const constructUserRelationResponse = (userRelation, currentUserId, includeNotif
     dateAdded: userRelation.dateAdded,
     relationStatus: userRelation.status,
     followingStatus: getFollowingStatus(currentUserId, userRelation.userId),
-    ...includeNotificationStatus && { notificationStatus: userRelation.notificationStatus }
+    ...includeNotificationStatus && { notificationStatus: getNotificationStatus() },
+    ...includeNotificationStatus && { relationId: userRelation.relationId }
   }
 }
 
@@ -304,26 +317,41 @@ const getFreetsAndRefreetsFromFollowers = (userId) => {
  * Get all notifications
  * 
  * @param {string} currentUserId - Id of the current user
- * @param {string} markAsSeen - Whether to mark notifications as seen before return them
  * @return {Object[]} - A list of all the notifications sorted in dateAdded
  */
-const getNotifications = (currentUserId, markAsSeen = false) => {
+const getNotifications = (currentUserId) => {
   // get follow requests for user
   const requests = userRelations.getAllRequestsReceived(currentUserId);
-  const requestsResponse = requests.map(request => constructUserRelationResponse(request, currentUserId));
+  const requestsResponse = requests.map(request => constructUserRelationResponse(request, currentUserId, true));
 
   // get all the followers without the hidden status
   const followers = userRelations.getAllFollowers(currentUserId);
   const followersResponse = followers
-                              .filter(relation => relation.notificationStatus !== "HIDDEN")
+                              .filter(relation => relation.targetNotificationStatus !== "NONE")
                               .map(relation => constructUserRelationResponse(relation, currentUserId, true))
+                              .map(relation => {
+                                // indicate that each of the relations is not acceptedRequest
+                                relation.isAcceptedRequest = false;
+                                return relation;
+                              });
+
+  // get all the accepted follow request
+  const following = userRelations.getAllFollowing(currentUserId);
+  const requestsAcceptedResponse = following
+                                    .filter(relation => relation.followerNotificationStatus !== "NONE")
+                                    .map(relation => constructUserRelationResponse(relation, currentUserId, true))
+                                    .map(relation => {
+                                      // indicate that each of the relations is an acceptedRequest
+                                      relation.isAcceptedRequest = true;
+                                      return relation;
+                                    });
 
   // get the refreets for the user
-  const userRefreets = refreets.getAllRefreetsForUser(currentUserId, false, markAsSeen);
+  const userRefreets = refreets.getAllRefreetsForUser(currentUserId, false);
   const refreetsResponse = userRefreets.map(refreet => constructRefreetResponse(refreet, true));
 
   // get the likes for the user
-  const userLikes = likes.getAllLikesForUser(currentUserId, false, markAsSeen);
+  const userLikes = likes.getAllLikesForUser(currentUserId, false);
   const likesResponse = userLikes.map(like => constructLikeResponse(like, true))
 
   // get the sorting date from the given notification object
@@ -338,7 +366,7 @@ const getNotifications = (currentUserId, markAsSeen = false) => {
   }
 
   return requestsResponse
-            .concat(refreetsResponse, likesResponse, followersResponse)
+            .concat(refreetsResponse, likesResponse, followersResponse, requestsAcceptedResponse)
             .sort((a, b) => getDate(a) > getDate(b) ? -1 : 1);
 }
 

@@ -32,7 +32,7 @@ export default {
 
         } else {
           // else it is a follow request
-          count ++
+          notification.notificationStatus === "NEW" && count ++
         }
       });
       return count;

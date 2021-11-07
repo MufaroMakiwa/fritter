@@ -20,7 +20,8 @@ export default {
 
   computed: {
     isFollowRequest() {
-      return this.notification.freetId === undefined;
+      return this.notification.relationStatus !== undefined 
+          && this.notification.relationStatus === "PENDING";
     }
   }
 }

@@ -144,10 +144,9 @@ class Refreets {
    * 
    * @param {string} userId - Id of the user
    * @param {Boolean} includeAuthorRefreets - Whether to include the author's refreets
-   * @param {Boolean} markAsSeen - Whether to mark the refreets as seen while filtering
    * @return {Refreet[]} - An array of refreets
    */
-  static getAllRefreetsForUser(userId, includeAuthorRefreets, markAsSeen) {
+  static getAllRefreetsForUser(userId, includeAuthorRefreets) {
     return Refreets.filter(refreet => {
       if (refreet.authorId !== userId) {
         return false;
@@ -157,7 +156,6 @@ class Refreets {
         return false;
       }
 
-      markAsSeen && refreet.notificationStatus === "NEW" && (refreet.notificationStatus = "SEEN");
       return true;
     })
   }

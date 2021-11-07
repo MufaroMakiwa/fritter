@@ -130,10 +130,9 @@ class Likes {
    * 
    * @param {string} userId - Id of the user
    * @param {Boolean} includeAuthorLikes - Whether to include the author's likes
-   * @param {Boolean} markAsSeen - Whether to mark the likes as seen while filtering
    * @return {Like[]} - An array of likes
    */
-   static getAllLikesForUser(userId, includeAuthorLikes, markAsSeen) {
+   static getAllLikesForUser(userId, includeAuthorLikes) {
     return Likes.filter(like => {
       if (like.authorId !== userId) {
         return false;
@@ -142,8 +141,6 @@ class Likes {
       if (!includeAuthorLikes && like.userId === userId) {
         return false;
       }
-
-      markAsSeen && like.notificationStatus === "NEW" && (like.notificationStatus = "SEEN");
       return true;
     })
   }

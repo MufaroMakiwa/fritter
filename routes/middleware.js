@@ -357,7 +357,15 @@ const isPendingRequestExists = (req, res, next) => {
     }).end();
     return;
   }
-  // if the relation is active already, no need to raise any errors
+
+  if (relation.status === "ACTIVE") {
+    res.status(403).json({
+      error: {
+        ignoreError: "This follow request has already been accepted."
+      }
+    }).end();
+    return;
+  }
   next();
 }
 
