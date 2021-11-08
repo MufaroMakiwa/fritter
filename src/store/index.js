@@ -21,10 +21,13 @@ const store = new Vuex.Store({
       state.suggestions = payload;
     },
 
-    updateNotifications(state, payload) {
-      if (state.user !== null) {
-        state.user.notifications = payload;
-      }
+    updateNotificationStatus(state, payload) {
+      if (state.user === null) return;
+      
+      const notifications = state.user.notifications;
+      if (payload.index >= state.user.notifications.length) return;
+      notifications[payload.index] = payload.notification;
+      state.user = {...state.user, notifications }
     }
   },
 
@@ -47,8 +50,8 @@ const store = new Vuex.Store({
       state.commit("setUser", payload);
     },
 
-    updateNotifications(state, payload) {
-      state.commit("updateNotifications", payload)
+    updateNotificationStatus(state, payload) {
+      state.commit("updateNotificationStatus", payload)
     }
   },
 

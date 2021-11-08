@@ -1,8 +1,8 @@
 <template>
-  <FollowRequest v-if="isFollowRequest" :request="notification"/>
-  <FollowNotification v-else-if="isActiveRelation" :notification="notification"/>
-  <LikeNotification v-else-if="isLike" :notification="notification"/>
-  <RefreetNotification v-else-if="isRefreet" :notification="notification"/>
+  <FollowRequest v-if="isFollowRequest" :request="notification" :index="index"/>
+  <FollowNotification v-else-if="isActiveRelation" :notification="notification" :index="index"/>
+  <LikeNotification v-else-if="isLike" :notification="notification" :index="index"/>
+  <RefreetNotification v-else-if="isRefreet" :notification="notification" :index="index"/>
 </template>
 
 <script>
@@ -16,7 +16,8 @@ export default {
   name: "NotificationCard",
 
   props: {
-    notification: Object
+    notification: Object,
+    index: Number,
   },
 
   components: {
@@ -25,13 +26,11 @@ export default {
 
   computed: {
     isFollowRequest() {
-      return this.notification.relationStatus !== undefined 
-          && this.notification.relationStatus === "PENDING";
+      return this.notification.relationStatus === "PENDING";
     },
 
     isActiveRelation() {
-      return this.notification.relationStatus !== undefined
-          && this.notification.relationStatus === "ACTIVE";
+      return this.notification.relationStatus === "ACTIVE";
     },
 
     isLike() {

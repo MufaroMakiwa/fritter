@@ -12,13 +12,15 @@
 <script>
 import { eventBus } from '../main';
 import NotificationTemplate from './NotificationTemplate';
+import { patch } from '../utils/crud-helpers';
 
  
 export default {
   name: "FollowNotification",
 
   props: {
-    notification: Object
+    notification: Object,
+    index: Number,
   },
 
   components: {
@@ -26,7 +28,23 @@ export default {
   },
 
   methods: {
-    goToProfile() {
+    async goToProfile() {
+      // update store
+      this.$store.dispatch('updateNotificationStatus', {
+        index: this.index,
+        notification: {
+          ...this.notification,
+          notificationStatus: "OPENED"
+        }
+      });
+
+      // update the backend
+      await patch('/api/user/notifications', {
+        updatedStatus: "OPENED",
+        ...this.notification.isAcceptedRequest && { acceptedRequestIds: [ this.notification.relationId ] },
+        ...!this.notification.isAcceptedRequest && { newFollowerIds: [ this.notification.relationId ] },
+      });
+
       eventBus.$emit('navigate-to-profile', this.notification.username);
     }
   },

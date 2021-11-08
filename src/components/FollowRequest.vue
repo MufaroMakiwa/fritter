@@ -13,9 +13,9 @@
         <button @click.stop="accept">Accept</button>
         <button class="cancel" @click.stop="decline">Decline</button>
       </div>
-    </template>
 
-    <ConfirmDialog ref="confirm"/>
+      <ConfirmDialog ref="confirm"/>
+    </template>
     
   </NotificationTemplate>
 </template>
@@ -32,6 +32,7 @@ export default {
 
   props: {
     request: Object,
+    index: Number,
   },
 
   components: {
@@ -45,7 +46,22 @@ export default {
   },
 
   methods: {
-    goToProfile() {
+    async goToProfile() {
+      // update store
+      this.$store.dispatch('updateNotificationStatus', {
+        index: this.index,
+        notification: {
+          ...this.request,
+          notificationStatus: "OPENED"
+        }
+      });
+
+      // update the backend
+      await patch('/api/user/notifications', {
+        updatedStatus: "OPENED",
+        newFollowerIds: [ this.request.relationId ]
+      });
+
       eventBus.$emit('navigate-to-profile', this.request.username);
     },
 

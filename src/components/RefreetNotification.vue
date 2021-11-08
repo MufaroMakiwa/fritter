@@ -17,13 +17,16 @@
 
 <script>
 import NotificationTemplate from './NotificationTemplate';
+import { patch } from '../utils/crud-helpers';
+
 
  
 export default {
   name: "RefreetNotification",
 
   props: {
-    notification: Object
+    notification: Object,
+    index: Number
   },
 
   components: {
@@ -32,7 +35,25 @@ export default {
 
   methods: {
     displayFreet() {
-      alert("TODO");
+      // update the store
+      const updatedRefreetDetails = {
+        ...this.notification.refreetDetails,
+        notificationStatus: "OPENED"
+      };
+       
+      this.$store.dispatch('updateNotificationStatus', {
+        index: this.index,
+        notification: {
+          ...this.notification,
+          refreetDetails: updatedRefreetDetails
+        }     
+      })
+      // display freet pop up
+
+      patch('/api/user/notifications', {
+        updatedStatus: "OPENED",
+        refreetIds: [ this.notification.refreetDetails.refreetId ]
+      });
     }
   },
 

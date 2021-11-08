@@ -52,7 +52,7 @@ export default {
     },
 
     heading() {
-      return this.isSignedIn ? "Suggestions" : 'Popular users';
+      return this.isSignedIn ? "Suggestions for you" : 'Popular users';
     }
   },
 

@@ -110,7 +110,7 @@ const constructUserResponse = (user, currentUserId) => {
 
   constructedResponse.refreetDetails = {
     ...includeStatus && { notificationStatus: refreet.notificationStatus },
-    ...includeStatus && { refreetId: refreet.likeId },
+    ...includeStatus && { refreetId: refreet.refreetId },
     refreetedBy: users.findOneByUserId(refreet.userId).username,
     dateAdded: refreet.dateAdded
   }

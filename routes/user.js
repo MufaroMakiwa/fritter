@@ -381,7 +381,6 @@ router.delete(
  * @param {string} updatedStatus - The new status to update the notifcations with
  * @param {String[]} likeIds - A list of likeIds for notifications to update
  * @param {String[]} refreetIds - A list of refreet ids for notifications to update
- * @param {String[]} followRequestIds - A list of followRequests to update
  * @param {String[]} acceptedRequestIds - A list of acceptedrequest ids to update
  * @param {String[]} newFollowerIds - A list of new follower notifications to update
  * @return {string} - a success message
@@ -400,9 +399,6 @@ router.patch(
 
     req.body.refreetIds 
       && refreets.updateRefreetNotificationStatus(req.body.refreetIds, newStatus);
-
-    req.body.followRequestIds
-      && userRelations.updateRelationNotificationStatus(req.body.followRequestIds, newStatus, "targetNotificationStatus");
 
     req.body.acceptedRequestIds
       && userRelations.updateRelationNotificationStatus(req.body.acceptedRequestIds, newStatus, "followerNotificationStatus");
