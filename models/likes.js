@@ -137,12 +137,27 @@ class Likes {
       if (like.authorId !== userId) {
         return false;
       }
-
       if (!includeAuthorLikes && like.userId === userId) {
         return false;
       }
       return true;
     })
+  }
+
+  /**
+   * Update the notification status of the like
+   * 
+   * @param {String[]} likeIds - Ids of likes whose notif status is to be updated 
+   * @param {string} updatedStatus - The new status for the like
+   * 
+   */
+  static updateLikeNotificationStatus(likeIds, updatedStatus) {
+    data = data.map(like => {
+      if (likeIds.includes(like.likeId) && like.notificationStatus !== "OPENED") {
+        like.notificationStatus = updatedStatus;
+      }
+      return like;
+    });
   }
 }
 

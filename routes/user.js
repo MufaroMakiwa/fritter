@@ -348,6 +348,7 @@ router.patch(
  * 
  * @name DELETE /user/followers/:username
  * 
+ * @param {string} username - username of user to remove
  * @return {string} - a success message
  * @throws {403} - if the user is not logged in, is trying to decline own request,
  *                 when user is trying to remove someone who does not follow them
@@ -377,6 +378,12 @@ router.delete(
  * 
  * @name PATCH /user/notifications
  * 
+ * @param {string} updatedStatus - The new status to update the notifcations with
+ * @param {String[]} likeIds - A list of likeIds for notifications to update
+ * @param {String[]} refreetIds - A list of refreet ids for notifications to update
+ * @param {String[]} followRequestIds - A list of followRequests to update
+ * @param {String[]} acceptedRequestIds - A list of acceptedrequest ids to update
+ * @param {String[]} newFollowerIds - A list of new follower notifications to update
  * @return {string} - a success message
  * @throws {403} - if the user is not logged in
  */
@@ -386,10 +393,26 @@ router.patch(
     validator.isUserLoggedIn
   ],
   (req, res) => {
-    const updatedNotifications = utils.getNotifications(req.session.userId, true);
-    res.status(200).json({
-      notifications: updatedNotifications 
+    const newStatus = req.body.updatedStatus;
+
+    req.body.likeIds 
+      && likes.updateLikeNotificationStatus(req.body.likeIds, newStatus);
+
+    req.body.refreetIds 
+      && refreets.updateRefreetNotificationStatus(req.body.refreetIds, newStatus);
+
+    req.body.followRequestIds
+      && userRelations.updateRelationNotificationStatus(req.body.followRequestIds, newStatus, "targetNotificationStatus");
+
+    req.body.acceptedRequestIds
+      && userRelations.updateRelationNotificationStatus(req.body.acceptedRequestIds, newStatus, "followerNotificationStatus");
+
+    req.body.newFollowerIds
+      && userRelations.updateRelationNotificationStatus(req.body.newFollowerIds, newStatus, "targetNotificationStatus");
+    
+    res.status(200).json({ 
+      message: "Notifications updated"
     }).end();
-});
+}); 
 
 module.exports = router;

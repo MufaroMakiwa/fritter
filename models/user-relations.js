@@ -286,6 +286,25 @@ class UserRelations {
       return relation;
     });
   }
+
+
+  /**
+   * Update the notification status of a relation
+   * 
+   * @param {string} relationIds - Relation ids to update status for
+   * @param {string} updatedStatus - The status to update with
+   * @param {string} notificationField - The notification status field to update
+   */
+  static updateRelationNotificationStatus(relationIds, updatedStatus, notificationField) {
+    data = data.map(relation => {
+      if (relationIds.includes(relation.relationId)) {
+        if (relation[notificationField] !== "OPENED" && relation[notificationField] !== "NONE") {
+          relation[notificationField] = updatedStatus;
+        }
+      } 
+      return relation;
+    })
+  }
 }
 
 module.exports = UserRelations;

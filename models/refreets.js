@@ -151,13 +151,27 @@ class Refreets {
       if (refreet.authorId !== userId) {
         return false;
       }
-
       if (!includeAuthorRefreets && refreet.userId === userId) {
         return false;
       }
-
       return true;
     })
+  }
+
+  /**
+   * Update the notification status of the refreet
+   * 
+   * @param {String[]} refreetIds - Ids of refreets whose notif status is to be updated 
+   * @param {string} updatedStatus - The new status for the refreet
+   * 
+   */
+   static updateRefreetNotificationStatus(refreetIds, updatedStatus) {
+    data = data.map(refreet => {
+      if (refreetIds.includes(refreet.refreetId) && refreet.notificationStatus !== "OPENED") {
+        refreet.notificationStatus = updatedStatus;
+      }
+      return refreet;
+    });
   }
 }
 
