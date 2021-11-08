@@ -1,7 +1,7 @@
 <template>
   <MainPageTemplate :loading="loading" :displaySidebar="true">
     <h2 class="section-title">Notifications</h2>
-    <section v-if="hasNotifications" class="follow-requests">
+    <section v-if="hasNotifications" class="notifications">
       <NotificationCard 
         v-for="(notification, index) in notifications"
         :key="index"
@@ -15,7 +15,7 @@
 <script>
 import MainPageTemplate from '../components/MainPageTemplate';
 import NotificationCard from '../components/NotificationCard';
-import { patch } from '../utils/crud-helpers';
+// import { patch } from '../utils/crud-helpers';
 
 export default {
   name: "Notifications",
@@ -62,7 +62,7 @@ export default {
 </script>
 
 <style scoped>
-.follow-requests {
+.notifications {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

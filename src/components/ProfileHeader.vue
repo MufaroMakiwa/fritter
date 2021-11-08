@@ -5,7 +5,7 @@
       <div class="header-main">
         <div class="username-container">
           <h2>{{ username }}</h2>
-          <font-awesome-icon icon="lock" v-if="isPrivateAccount" class="icon"/>
+          <font-awesome-icon icon="user-lock" v-if="isPrivateAccount" class="icon"/>
           <span v-if="followsCurrentUser">Follows you</span>
         </div>
         <span class="header-user-meta" v-if="isAuthorExists">Joined {{ dateJoined }}</span>

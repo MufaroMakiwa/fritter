@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <CreateFreet :isDialog="true" @dismiss-modal="closeDialog"/>
+    <CreateFreet :isDialog="true" @dismiss-modal="closeDialog" :autofocus="true"/>
   </ModalTemplate>
 </template>
 

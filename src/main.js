@@ -17,10 +17,12 @@ import {
   faTimes,
   faExclamationTriangle,
   faSearch, 
-  faLock } from '@fortawesome/free-solid-svg-icons'
+  faUserLock,
+  faUserFriends,
+  faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes, faExclamationTriangle, faSearch, faLock)
+library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes, faExclamationTriangle, faSearch, faUserLock, faUserPlus, faUserFriends)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 
