@@ -16,7 +16,7 @@
           <FollowButton v-if="isSignedIn"
             followingStatus="NONE"
             :username="suggestion.username"
-            :isSuggestion="true"/>
+            size="small"/>
         </div>
       </div>
     </div>

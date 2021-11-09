@@ -33,6 +33,25 @@ export default {
     NotificationTemplate
   },
 
+  computed: {
+    message() {
+      return "refreeted one of your freets.";
+    },
+
+    notificationClass() {
+      return this.notification.refreetDetails.notificationStatus.toLowerCase();
+    },
+
+    username() {
+      const user = this.$store.getters.user;
+      return user !== null ? user.username : '';
+    },
+
+    isSignedIn() {
+      return this.$store.getters.isSignedIn;
+    },
+  },
+
   methods: {
     displayFreet() {
       // update the store
@@ -48,24 +67,20 @@ export default {
           refreetDetails: updatedRefreetDetails
         }     
       })
-      // display freet pop up
 
       patch('/api/user/notifications', {
         updatedStatus: "OPENED",
         refreetIds: [ this.notification.refreetDetails.refreetId ]
       });
-    }
-  },
 
-  computed: {
-    message() {
-      return "refreeted one of your freets.";
-    },
+      if (!this.isSignedIn) return;
 
-    notificationClass() {
-      return this.notification.refreetDetails.notificationStatus.toLowerCase();
+      // go to profile page
+      this.$router.push({ 
+        name: "Profile",
+        params: { author: this.username }
+      });
     }
   }
-
 }
 </script>

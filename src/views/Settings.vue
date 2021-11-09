@@ -5,7 +5,7 @@
         <h3>Settings</h3>
         <span 
           v-for="(section, index) in settingsSections"
-          @click="active = section"
+          @click="setActiveTab(section)"
           :class="[active === section ? 'active' : '']" 
           :key="index">
           {{ section }}
@@ -48,7 +48,40 @@ export default {
     },
   },
 
+  methods: {
+    setActiveTab(tab) {
+      if (this.active === tab) return;
+      this.active = tab;
+
+      let updatedRoute;
+      const currentPath = window.location.pathname;
+
+      // update the url
+      if (tab === "Privacy") {
+        if (currentPath.includes("privacy")) return;
+        updatedRoute = currentPath.substring(0, currentPath.indexOf("general"));
+
+      } else {
+        if (currentPath.includes("general")) return;
+        updatedRoute = currentPath.substring(0, currentPath.indexOf("privacy"));
+      }
+
+      history.replaceState(
+        {},
+        null,
+        `${updatedRoute}${tab.toLowerCase()}`
+      )
+    }
+  },
+
   mounted() {
+    // update the selected tab
+    if (this.$route.path.includes("general")) {
+      this.setActiveTab("General");
+    } else {
+      this.setActiveTab("Privacy");
+    }
+
     this.loading = false;
   },
 }

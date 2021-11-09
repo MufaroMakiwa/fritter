@@ -5,6 +5,7 @@
     </label>
     
     <input 
+      ref="credentialInput"
       class="input"
       :name="name" 
       :value="value"
@@ -52,6 +53,10 @@ export default {
     displayLabel: {
       default: true,
       type: Boolean
+    },
+    autofocus: {
+      default: false,
+      type: Boolean
     }
   },
 
@@ -70,6 +75,10 @@ export default {
     togglePassword() {
       this.showPassword = !this.showPassword;
     }
+  },
+
+  mounted() {
+    if (this.autofocus) this.$refs.credentialInput.focus();
   }
 }
 </script>

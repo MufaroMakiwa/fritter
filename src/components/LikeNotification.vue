@@ -28,6 +28,25 @@ export default {
     index: Number
   },
 
+   computed: {
+    username() {
+      const user = this.$store.getters.user;
+      return user !== null ? user.username : '';
+    },
+
+    isSignedIn() {
+      return this.$store.getters.isSignedIn;
+    },
+
+    message() {
+      return "liked one of your freets.";
+    },
+
+    notificationClass() {
+      return this.notification.likeDetails.notificationStatus.toLowerCase();
+    }
+  },
+
   components: {
     NotificationTemplate
   },
@@ -47,24 +66,20 @@ export default {
           likeDetails: updatedLikeDetails
         }     
       })
-      // display freet pop up
 
       patch('/api/user/notifications', {
         updatedStatus: "OPENED",
         likeIds: [ this.notification.likeDetails.likeId ]
       });
+
+      if (!this.isSignedIn) return;
+
+      // go to profile page
+      this.$router.push({ 
+        name: "Profile",
+        params: { author: this.username }
+      });
     }
   },
-
-  computed: {
-    message() {
-      return "liked one of your freets.";
-    },
-
-    notificationClass() {
-      return this.notification.likeDetails.notificationStatus.toLowerCase();
-    }
-  }
-
 }
 </script>

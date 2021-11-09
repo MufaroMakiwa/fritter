@@ -6,7 +6,7 @@
 
     <button 
       v-else
-      :class="['profile-header-button', 'follow-button', followButton.cssClass, isSuggestion ? 'medium' : '' ]" 
+      :class="['profile-header-button', 'follow-button', followButton.cssClass, size ]" 
       :data-hover="followButton.hoverText"
       :data-text="followButton.text"
       @click.stop="handleFollow">
@@ -29,14 +29,14 @@ export default {
 
     username: String,
 
-    isSuggestion: {
+    isFreet: {
       default: false,
       type: Boolean,
     },
 
-    isFreet: {
-      default: false,
-      type: Boolean,
+    size: {
+      default: '',
+      type: String
     }
   },
 
@@ -180,12 +180,6 @@ export default {
 .follow-button {
   position: relative;
   display: inline-block;
-}
-
-.follow-button.medium {
-  width: 75px;
-  height: 32px;
-  border-radius: 16px;
 }
 
 .follow-button::before,

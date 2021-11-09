@@ -8,7 +8,8 @@
       name="username" 
       label="Username"
       v-model="username.value"
-      :error="username.error"/>
+      :error="username.error"
+      :autofocus="true"/>
       
     <CredentialInputField 
       name="password" 

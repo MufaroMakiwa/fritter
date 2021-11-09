@@ -34,10 +34,7 @@ const store = new Vuex.Store({
   actions: {
     async getUser(state) {
       const response = await get('/api/user/session');
-      if (response.isSuccess) {
-        if (response.data.user !== null) {
-          console.log(JSON.stringify(response.data.user.notifications, null, 4));
-        }      
+      if (response.isSuccess) {    
         state.commit("setUser", response.data.user);
         state.commit("setSuggestions", response.data.suggestions);
 

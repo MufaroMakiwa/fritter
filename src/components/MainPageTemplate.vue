@@ -165,6 +165,18 @@ button in the profile header
   text-align: center;
 }
 
+.profile-header-button.medium {
+  width: 100px;
+  height: 32px;
+  border-radius: 16px;
+}
+
+.profile-header-button.small {
+  width: 75px;
+  height: 32px;
+  border-radius: 16px;
+}
+
 .fade-enter-active {
   animation: fade-in .2s linear;
 }

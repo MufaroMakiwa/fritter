@@ -98,7 +98,7 @@ export default {
       return this.isSignedIn
       && this.isAuthorExists
       && this.author.username === this.user.username;
-    },
+    }
   },
 
   methods: {
@@ -119,7 +119,7 @@ export default {
             this.isAuthorExists = true; 
 
             // if there is no private info, make sure the active tab is freets
-            !this.hasPrivateInformation && this.activeTabListener('freets');
+            !this.hasPrivateInformation && this.setCurrentTab('freets');
 
           } else {
             // if there is any error, then this user does not exist
@@ -136,11 +136,43 @@ export default {
       this.getAuthorDetails();
     },
 
-    activeTabListener(tab) {
+    isCurrentTab(tab) {
+      return this.$route.path.includes(tab);
+    },
+
+    withoutUrlLastPath() {
+      const current = window.location.pathname;
+      let toRemove;
+      if (current.includes("refreets")) toRemove = "refreets";
+      if (current.includes("likes")) toRemove = "likes";
+      if (current.includes("followers")) toRemove = "followers";
+      if (current.includes("following")) toRemove = "following";
+
+      if (toRemove !== undefined) {
+        return current.substring(0, current.lastIndexOf(toRemove) - 1);
+
+      } else if (current.charAt(current.length - 1) === "/") {
+        return current.substring(0, current.length - 1);
+
+      } else {
+        return current;
+      }
+    },
+
+    setCurrentTab(tab) {
       if (this.activeTab === tab) {
         return;
       }
       this.activeTab = tab;
+
+      // update the url
+      const noExtension = this.withoutUrlLastPath();
+      if (tab === "freets") {
+        history.replaceState({}, null, noExtension);
+
+      } else {
+        history.replaceState({}, null, `${noExtension}/${tab}`);
+      }
     }
   },
 
@@ -151,12 +183,30 @@ export default {
     }
   },
 
+  mounted() {
+    if (this.isCurrentTab("refreets")) {
+      this.setCurrentTab("refreets");
+
+    } else if (this.isCurrentTab("likes")) {
+      this.setCurrentTab("likes");
+
+    } else if (this.isCurrentTab("followers")) {
+      this.setCurrentTab("followers");
+
+    } else if (this.isCurrentTab("following")) {
+      this.setCurrentTab("following");
+    
+    } else {
+      this.setCurrentTab("freets");
+    }
+  },
+
   created() {   
     // need to render page differently when it is for the current user
     this.getAuthorDetails();
 
     eventBus.$on('update-freets', this.freetModifiedListener);
-    eventBus.$on('set-active-tab', this.activeTabListener);
+    eventBus.$on('set-active-tab', this.setCurrentTab);
 
     // when a user follows or unfollows someone, update the profile
     eventBus.$on('update-profile', this.getAuthorDetails);
@@ -165,7 +215,7 @@ export default {
   beforeDestroy() {
     // unregister all eventBus listeners
     eventBus.$off('update-freets', this.freetModifiedListener);
-    eventBus.$off('set-active-tab', this.activeTabListener);
+    eventBus.$off('set-active-tab', this.setCurrentTab);
     eventBus.$off('update-profile', this.getAuthorDetails);
   }
 }

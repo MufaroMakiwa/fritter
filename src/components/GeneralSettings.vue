@@ -16,6 +16,7 @@
         <div v-else class="update-field">
           <CredentialInputField 
             :displayLabel="false"
+            :autofocus="true"
             :error="username.error"
             placeholder="Enter new username"
             v-model="username.value"/>
@@ -44,6 +45,7 @@
           <CredentialInputField 
             :displayLabel="false"
             :error="password.error"
+            :autofocus="true"
             v-model="password.value"
             placeholder="Enter new password"
             :isPasswordField="true"/>

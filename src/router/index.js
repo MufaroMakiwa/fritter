@@ -17,9 +17,32 @@ Vue.use(VueRouter);
 const router = new VueRouter({
   mode: 'history',
   routes: [
+
+    {
+      path: '/home', 
+      name: "Home",
+      component: Home, 
+      props: true,
+      meta: {
+        title: route => {
+          return "Home - Fritter";
+        }
+      }
+    },
+
     {
       path: '/', 
-      name: "Home",
+      redirect: '/home',  
+    },
+
+    {
+      path: '/home/latest', 
+      redirect: '/home',  
+    },
+
+    {
+      path: '/home/discover', 
+      name: "HomeDiscover",
       component: Home, 
       props: true,
       meta: {
@@ -56,11 +79,6 @@ const router = new VueRouter({
     },
 
     {
-      path: '/home', 
-      redirect: '/'
-    },
-
-    {
       path: '/notifications', 
       name: 'Notifications',
       component: Notifications, 
@@ -74,8 +92,8 @@ const router = new VueRouter({
     },
 
     {
-      path: '/settings', 
-      name: 'Settings',
+      path: '/settings/general', 
+      name: 'GeneralSettings',
       component: Settings, 
       props: true,
       meta: {
@@ -87,8 +105,75 @@ const router = new VueRouter({
     },
 
     {
+      path: '/settings/privacy', 
+      name: 'PrivacySettings',
+      component: Settings, 
+      props: true,
+      meta: {
+        title: route => {
+          return "Settings - Fritter";
+        },
+        requiresAuth: true
+      }
+    },
+
+    {
+      path: '/settings', 
+      name: 'Settings',
+      redirect: '/settings/general',  
+    },
+
+    {
       path: '/:author', 
       name: 'Profile',
+      component: Profile, 
+      props: true,
+      meta: { 
+        title: route => {
+          return `${route.params.author} - Fritter`;
+        }
+      }
+    },
+
+    {
+      path: '/:author/refreets', 
+      name: 'ProfileRefreets',
+      component: Profile, 
+      props: true,
+      meta: { 
+        title: route => {
+          return `${route.params.author} - Fritter`;
+        }
+      }
+    },
+
+    {
+      path: '/:author/likes', 
+      name: 'ProfileLikes',
+      component: Profile, 
+      props: true,
+      meta: { 
+        title: route => {
+          return `${route.params.author} - Fritter`;
+        }
+      }
+    },
+
+    {
+      path: '/:author/followers', 
+      name: 'ProfileFollowers',
+      component: Profile, 
+      props: true,
+      meta: { 
+        title: route => {
+          return `${route.params.author} - Fritter`;
+        }
+      }
+    },
+
+    {
+      path: '/:author/following', 
+      name: 'ProfileFollowing',
       component: Profile, 
       props: true,
       meta: { 

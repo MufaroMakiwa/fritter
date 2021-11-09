@@ -9,19 +9,19 @@
       <div class="toggle-container">
 
         <span 
-          :class="['home-toggle', activeTab === 'Latest' ? 'active' : 'inactive']"
-          @click="setActiveTab('Latest')">
+          :class="['home-toggle', activeTab === 'latest' ? 'active' : 'inactive']"
+          @click="setActiveTab('latest')">
           Latest
         </span>
 
         <span 
-          :class="['home-toggle', activeTab === 'Discover' ? 'active' : 'inactive']"
-          @click="setActiveTab('Discover')">
+          :class="['home-toggle', activeTab === 'discover' ? 'active' : 'inactive']"
+          @click="setActiveTab('discover')">
           Discover
         </span>
       </div>
     </div>
-    <FreetsList :freets="freets" v-if="activeTab === 'Latest'"/>
+    <FreetsList :freets="freets" v-if="activeTab === 'latest'"/>
     <FreetsList :freets="popularFreets" v-else/>
 
   </MainPageTemplate>
@@ -48,7 +48,7 @@ export default {
       loading: true,
       freets: [],
       popularFreets: [],
-      activeTab: "Latest"
+      activeTab: "latest"
     }
   },
 
@@ -66,6 +66,26 @@ export default {
     setActiveTab(tab) {
       if (this.activeTab === tab) return;
       this.activeTab = tab;
+
+      let updatedRoute;
+      const currentPath = window.location.pathname;
+
+      // update the url
+      if (tab === "latest") {
+        if (!currentPath.includes("discover")) return;
+        updatedRoute = currentPath.substring(0, currentPath.indexOf("discover") - 1);
+
+      } else {
+        const slash = currentPath.charAt(currentPath.length - 1) === "/" ? '' : "/";
+        if (currentPath.includes("discover")) return;
+        updatedRoute = `${currentPath}${slash}${tab.toLowerCase()}`
+      }
+
+      history.replaceState(
+        {},
+        null,
+        updatedRoute
+      )
     },
 
     getFreets() {
@@ -89,6 +109,15 @@ export default {
 
       // update the freets
       this.getFreets();
+    }
+  },
+
+  mounted() {
+    // update the selected tab
+    if (this.$route.path.includes("discover")) {
+      this.setActiveTab("discover");
+    } else {
+      this.setActiveTab("latest");
     }
   },
 

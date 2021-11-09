@@ -234,7 +234,9 @@ header .profile-details {
   justify-content: center;
   flex-grow: 1;
   transition: all 0.3s;
-  padding: 0.5rem 0;
+  padding: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.3rem;
   border-bottom: 3px solid white;
 }
 

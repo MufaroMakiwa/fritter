@@ -1,7 +1,7 @@
 <template>
   <div class="navbar-container">
     <nav>
-      <h1 @click="renderPage('Home')" class="app-name">Fritter</h1>
+      <h1 @click="goToHome()" class="app-name">Fritter</h1>
  
       <SearchBar />  
 
@@ -126,6 +126,16 @@ export default {
       this.renderPage("Settings");
     },
 
+    goToHome() {
+      // this because of the discover tab which may cause problems when on the home page
+      if (this.$route.path.includes("home")) {
+        window.location.replace("/home");
+      } else {
+        this.$router.push({ name: "Home"}).catch(() => {});
+      }
+      
+    },
+
 
     pushToProfile(author) {
       this.$router.push({ 
@@ -137,7 +147,7 @@ export default {
     goToProfile(author) {
       if (this.$route.name === "Profile") {
         if (this.$route.params.author === author) {
-          this.$router.go();
+          window.location.replace(`/${author}`);
         } else {
           this.pushToProfile(author);
         }        

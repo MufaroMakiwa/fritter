@@ -12,11 +12,12 @@
     <FollowButton 
       v-if="!isCurrentUser"
       :followingStatus="user.followingStatus"
-      :username="user.username"/>
+      :username="user.username"
+      size="medium"/>
 
     <button
       v-if="displayRemoveButton"
-      class="profile-header-button remove-button"
+      class="profile-header-button medium remove-button"
       @click.stop="removeFollower">
       Remove
     </button>
