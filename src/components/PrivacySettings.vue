@@ -1,7 +1,7 @@
 <template>
   <section class="pri-stng-container">
     <div class="privacy-section">
-      <span class="section-title">Account activity</span>
+      <span class="sub-section-title">Account activity</span>
 
       <div class="section-controls">
         <div 
@@ -23,7 +23,7 @@
     </div>
 
     <div class="privacy-section">
-      <span class="section-title">Delete your account</span>
+      <span class="sub-section-title">Delete your account</span>
 
       <span class="summary">
         Deleting your account will erase all your data which including user 
@@ -130,7 +130,7 @@ export default {
   padding-top: 0;
 }
 
-.section-title {
+.sub-section-title {
   font-weight: bold;
   margin-bottom: 1rem;
   transition: all 0.3s;

@@ -153,7 +153,7 @@ export default {
 }
 
 .home-navigator .title {
-  color: gray;
+  color: black;
 }
 
 .toggle-container {

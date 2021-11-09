@@ -69,14 +69,8 @@ export default {
   align-items: flex-start;
   padding: 1.5rem 0;
   border-bottom: 1px solid lightgray;
-  /* border-left: 1px solid lightgray;
-  border-right: 1px solid lightgray; */
   cursor: pointer;
   transition: all 0.3s;
-}
-
-.notification-card-container:first-of-type {
-  border-top: 1px solid lightgray
 }
 
 .notification-card-container.new {

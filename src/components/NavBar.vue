@@ -27,7 +27,7 @@
 
         <NotificationIcon 
           :class="['profile-icon', isNotificationPage ? 'selected' : '', 'tooltip']"
-          @click.native="renderPage('Notifications')" 
+          @click.native="goToNotifications()" 
           data-label="Notifications"/>
 
         <button @click.stop="isCreateFreetDialogOpen= true">Create Freet</button>
@@ -133,9 +133,15 @@ export default {
       } else {
         this.$router.push({ name: "Home"}).catch(() => {});
       }
-      
     },
 
+    goToNotifications() {
+      if (this.$route.path.includes("notifications")) {
+        window.location.replace("/notifications");
+      } else {
+        this.$router.push({ name: "Notifications"}).catch(() => {});
+      }
+    },
 
     pushToProfile(author) {
       this.$router.push({ 

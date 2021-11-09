@@ -92,6 +92,50 @@ const router = new VueRouter({
     },
 
     {
+      path: '/notifications/freets', 
+      name: 'FreetsNotifications',
+      component: Notifications, 
+      props: true,
+      meta: {
+        title: route => {
+          return "Notifications - Fritter";
+        },
+        requiresAuth: true
+      }
+    },
+
+    {
+      path: '/notifications/followers', 
+      name: 'FollowersNotifications',
+      component: Notifications, 
+      props: true,
+      meta: {
+        title: route => {
+          return "Notifications - Fritter";
+        },
+        requiresAuth: true
+      }
+    },
+
+    {
+      path: '/notifications/following', 
+      name: 'FollowingNotifications',
+      component: Notifications, 
+      props: true,
+      meta: {
+        title: route => {
+          return "Notifications - Fritter";
+        },
+        requiresAuth: true
+      }
+    },
+
+    {
+      path: '/notifications/all', 
+      redirect: '/notifications',  
+    },
+
+    {
       path: '/settings/general', 
       name: 'GeneralSettings',
       component: Settings, 
