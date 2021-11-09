@@ -17,8 +17,12 @@ const utils = require('./utilities');
 router.get('/', (req, res) => {
   // if user is logged in, get freets and refreets from only the users they follow, 
   // else everyone
-  const response = utils.getFreetsAndRefreetsFromFollowers(req.session.userId);
-  res.status(200).json(response).end();
+  const latestFreets = utils.getFreetsAndRefreetsFromFollowers(req.session.userId);
+  const popularFreets = utils.getPopularFreets(req.session.userId);
+  res.status(200).json({
+    freets: latestFreets,
+    popularFreets
+  }).end();
 })
 
 /**

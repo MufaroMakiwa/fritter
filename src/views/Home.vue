@@ -3,9 +3,26 @@
     <div class="home-create-freet card" v-if="isSignedIn">
       <CreateFreet />
     </div>
+    
+    <div class="home-navigator">
+      <h2 class="title">Feed</h2>
+      <div class="toggle-container">
 
-    <h2 class="section-title">Feed</h2>
-    <FreetsList :freets="freets" />
+        <span 
+          :class="['home-toggle', activeTab === 'Latest' ? 'active' : 'inactive']"
+          @click="setActiveTab('Latest')">
+          Latest
+        </span>
+
+        <span 
+          :class="['home-toggle', activeTab === 'Popular' ? 'active' : 'inactive']"
+          @click="setActiveTab('Popular')">
+          Popular
+        </span>
+      </div>
+    </div>
+    <FreetsList :freets="freets" v-if="activeTab === 'Latest'"/>
+    <FreetsList :freets="popularFreets" v-else/>
 
   </MainPageTemplate>
 </template>
@@ -30,6 +47,8 @@ export default {
     return {
       loading: true,
       freets: [],
+      popularFreets: [],
+      activeTab: "Latest"
     }
   },
 
@@ -44,11 +63,17 @@ export default {
   },
 
   methods: {
+    setActiveTab(tab) {
+      if (this.activeTab === tab) return;
+      this.activeTab = tab;
+    },
+
     getFreets() {
       get('/api/freets')
         .then((response) => {
           if (response.isSuccess) {
-            this.freets = response.data;
+            this.freets = response.data.freets;
+            this.popularFreets = response.data.popularFreets;
           } else {
             // this request is not expected to throw any errors from the server
             // if any happens, the freets will not be updates
@@ -86,7 +111,63 @@ export default {
 <style scoped>
 .home-create-freet {
   padding: 1.5rem;
-  margin-bottom: var(--page-padding);
+  margin-bottom: 3rem;
+}
+
+.home-navigator {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.home-navigator .title {
+  color: gray;
+}
+
+.toggle-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.home-toggle {
+  height: 32px;
+  border-radius: 16px;
+  padding: 0 1rem;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.home-toggle.active {
+  /* background-color: white;
+  border: 1px solid lightgray;
+  color: black; */
+  background-color: gray;
+  color: white;
+  border: 1px solid gray;
+}
+
+.home-toggle:last-of-type {
+  margin-left: 1rem;
+}
+
+.home-toggle.inactive {
+  border: 1px solid darkgray;
+  color: gray;
+  background-color: rgba(0, 0, 0, 0.05)
+}
+
+.home-toggle.inactive:hover {
+  background-color: lightgray;
+  color: black;
 }
 
 </style>

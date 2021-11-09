@@ -155,7 +155,7 @@ header {
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin-bottom: var(--page-padding);
+  margin-bottom: 3rem;
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);

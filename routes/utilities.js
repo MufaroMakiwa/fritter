@@ -313,6 +313,55 @@ const getFreetsAndRefreetsFromFollowers = (userId) => {
   return mergeFreetsAndRefreets(freetsResponse, refreetsResponse);
 }
 
+
+/**
+ * 
+ * Get a list of popular freets. Freets are popular by the total number of
+ * like and refreets
+ * 
+ * @param {string} userId - id of the current session user
+ * @return {Freet[]} - A list of all freets from users you do not follow sorted by popularity
+ */
+const getPopularFreets = (userId) => {
+
+  // get the total number or likes and refreets for a freet
+  const getLikesAndRefreetsTotal = (freetId) => {
+    const likesResponse = likes.getAllLikesByFreetId(freetId);
+    const refreetsResponse = refreets.getAllRefreetsByFreetId(freetId);
+    return likesResponse.length + refreetsResponse.length;
+  }
+
+  let excludeFreetIds;
+
+  if (userId !== undefined) {
+    // get freets from users being followed and pending
+    const followingUserIds = userRelations.getAllFollowing(userId).map(relation => relation.userId);
+    followingUserIds.push(userId);
+    const pendingRequestUserIds = userRelations.getAllRequestsSent(userId).map(relation => relation.userId);
+
+    excludeFreetIds = freets
+                        .getAllFreetsByUsers(followingUserIds.concat(pendingRequestUserIds))
+                        .map(freet => freet.freetId);
+
+  } else {
+    excludeFreetIds = [];
+  }
+
+  return freets
+          .findAll()
+          .filter(freet => !excludeFreetIds.includes(freet.freetId))
+          .sort((a, b) => {
+            if (getLikesAndRefreetsTotal(a.freetId) > getLikesAndRefreetsTotal(b.freetId)) {
+              return -1;
+              
+            } else {
+              return 1;
+            }
+          })
+          .map(freet => constructFreetResponse(freet))
+}
+
+
 /**
  * Get all notifications
  * 
@@ -384,6 +433,7 @@ module.exports = Object.freeze({
   getFreetsAndRefreetsFromFollowers,
   getFollowSuggestions,
   isFollowingCurrentUser,
-  getNotifications
+  getNotifications,
+  getPopularFreets
 });
 

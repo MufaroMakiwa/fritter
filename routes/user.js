@@ -16,13 +16,17 @@ const router = express.Router();
  * @return {String[]} - A list of usernames that start with the given query
  */
 router.get('/search', (req, res) => {
-  const suggestions = users.filter(user => {
-    return user.username.toLowerCase().includes(req.query.querytext.toLowerCase())
-  });
+  const suggestions = 
+          users
+            .filter(user => {
+              return user.username.toLowerCase().includes(req.query.querytext.toLowerCase())
+            })
+            .map(user => user.username)
+            .sort((a, b) => a > b ? 1: -1)
+            .slice(0, 5)
 
-  res.status(200).json({
-    suggestions: suggestions.map(user => user.username)
-  }).end();
+
+  res.status(200).json({ suggestions }).end();
 });
 
 /**

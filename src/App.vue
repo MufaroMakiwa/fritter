@@ -99,7 +99,7 @@ html, body {
   background-color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
   border: 1px solid lightgray;
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 button {
