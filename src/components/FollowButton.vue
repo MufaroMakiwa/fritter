@@ -1,6 +1,11 @@
 <template>
   <div>
+    <span v-if="isFreet" class="follow-span" @click="handleFollow">
+      Follow
+    </span>
+
     <button 
+      v-else
       :class="['profile-header-button', 'follow-button', followButton.cssClass, isSuggestion ? 'medium' : '' ]" 
       :data-hover="followButton.hoverText"
       :data-text="followButton.text"
@@ -27,7 +32,12 @@ export default {
     isSuggestion: {
       default: false,
       type: Boolean,
-    } 
+    },
+
+    isFreet: {
+      default: false,
+      type: Boolean,
+    }
   },
 
   components: {
@@ -274,5 +284,17 @@ export default {
   background-color: lightgray;
   border: 1px solid lightgray;
   color: gray;
+}
+
+.follow-span {
+  color: var(--theme-color);
+  margin-left: 0.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.follow-span:hover {
+  color: var(--button-color-hover);
 }
 </style>

@@ -45,7 +45,7 @@ router.post(
     const freet = freets.addOne(req.session.userId, req.body.content);
     res.status(201).json({
       message: 'Your freet was created successfully.', 
-      freet: utils.constructFreetResponse(freet)
+      freet: utils.constructFreetResponse(freet, req.session.userId)
     }).end();
 });
 
@@ -103,7 +103,7 @@ router.patch(
     const freet = freets.updateOne(req.params.freetId, req.body.content);
     res.status(200).json({
       message: 'Your freet was updated successfully.', 
-      freet: utils.constructFreetResponse(freet)
+      freet: utils.constructFreetResponse(freet, req.session.userId)
     }).end();
 });
 

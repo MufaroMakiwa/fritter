@@ -1,5 +1,5 @@
 <template>
-  <div class="freet-outer">
+  <div class="freet-outer card">
     <span v-if="isRefreet" class="refreet-label">
       <font-awesome-icon icon="retweet" class="icon"/>
 
@@ -14,7 +14,14 @@
       </div>
 
       <section class="freet-details">
-        <span class="freet-author" @click="goToProfile(freet.author)">{{ freet.author }}</span>
+        <div class="freet-author-container">
+          <span class="freet-author" @click="goToProfile(freet.author)">{{ freet.author }}</span>
+          <FollowButton 
+            v-if="displayFollowButton"
+            followingStatus="NONE" 
+            :username="freet.author" 
+            :isFreet="true"/>
+        </div>
 
         <span class="freet-timestamp">{{ timestamp }}</span>
 
@@ -77,11 +84,13 @@
 
 <script>
 import FreetIcon from './FreetIcon';
+import FollowButton from './FollowButton';
 import { delete_, post } from '../utils/crud-helpers';
 import { formattedTimePast } from '../utils/utilities';
 import ConfirmDialog from './ConfirmDialog';
 import { eventBus } from '../main';
 import CreateFreet from './CreateFreet';
+
 
 export default {
   name: "FreetCard",
@@ -98,7 +107,7 @@ export default {
   },
 
   components: {
-    FreetIcon, CreateFreet, ConfirmDialog
+    FreetIcon, CreateFreet, ConfirmDialog, FollowButton
   },
 
   computed: {
@@ -153,6 +162,18 @@ export default {
 
     isCurrentUserAuthor() {
       return this.isSignedIn && this.user.username === this.freet.author;
+    },
+
+    displayFollowButton() {
+      if (!this.isSignedIn) {
+        return false;
+      }
+
+      if (this.user.username === this.freet.author) {
+        return false;
+      }
+
+      return !this.freet.isCurrentUserAuthorRelationExists;
     },
 
     // this will be true when any unforseen error happens that is sent from the server
@@ -317,13 +338,17 @@ export default {
 <style scoped>
 .freet-outer {
   padding: 1.5rem;
-  border-bottom: 1px solid lightgray;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
   transition: all 0.3s;
+  margin-bottom: 1.5rem;
+}
+
+.freet-outer:last-of-type {
+  margin-bottom: 0;
 }
 
 .refreet-label {
@@ -351,6 +376,12 @@ export default {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+}
+
+.freet-author-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .freet-author {

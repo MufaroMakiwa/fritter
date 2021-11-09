@@ -171,9 +171,9 @@ router.post(
   // create the response
   const response = {
     author: utils.constructUserResponse(author),
-    freets: authorFreets.map(utils.constructFreetResponse),
-    refreets: authorRefreets.map(refreet => utils.constructRefreetResponse(refreet)),
-    likes: authorLikes.map(like => utils.constructLikeResponse(like)),
+    freets: authorFreets.map(freet => utils.constructFreetResponse(freet, req.session.userId)),
+    refreets: authorRefreets.map(refreet => utils.constructRefreetResponse(refreet, req.session.userId)),
+    likes: authorLikes.map(like => utils.constructLikeResponse(like, req.session.userId)),
     followers: followers.map(relationsResponseConstructor),
     following: following.map(relationsResponseConstructor),
     hasPrivateInformation: includePrivateInfo,

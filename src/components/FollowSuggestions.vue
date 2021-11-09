@@ -103,6 +103,11 @@ export default {
   position: relative;
 }
 
+.suggestion-item:last-of-type {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
 .suggestion-item .inner {
   display: flex;
   flex-direction: row;

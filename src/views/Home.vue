@@ -15,9 +15,9 @@
         </span>
 
         <span 
-          :class="['home-toggle', activeTab === 'Popular' ? 'active' : 'inactive']"
-          @click="setActiveTab('Popular')">
-          Popular
+          :class="['home-toggle', activeTab === 'Discover' ? 'active' : 'inactive']"
+          @click="setActiveTab('Discover')">
+          Discover
         </span>
       </div>
     </div>

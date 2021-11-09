@@ -1,5 +1,5 @@
 <template>
-  <section class="freets-list card" v-if="hasFreets">
+  <section class="freets-list" v-if="hasFreets">
     <FreetCard 
       v-for="(freet, index) in freets" 
       :key="index"
