@@ -1,6 +1,6 @@
 <template>
   <MainPageTemplate :loading="loading" :displaySidebar="true">
-    <h2 class="section-title">Notifications</h2>
+    <h3 class="section-title">Notifications</h3>
 
     <div class="tab-navigator">
       <div 
@@ -21,13 +21,19 @@
         :index="index"/>
     </section>
 
-    <span v-else class="empty-message">{{ noNotificationsMessage }}</span>
+    <div v-else class="no-content-section">
+      <NoContent 
+        title="No notifications to display, yet!"
+        :summary="noNotificationsMessage"/>
+    </div>
   </MainPageTemplate>
 </template>
 
 <script>
 import MainPageTemplate from '../components/MainPageTemplate';
 import NotificationCard from '../components/NotificationCard';
+import NoContent from '../components/NoContent';
+
 import { patch } from '../utils/crud-helpers';
 
 
@@ -35,7 +41,7 @@ export default {
   name: "Notifications",
 
   components: {
-    MainPageTemplate, NotificationCard
+    MainPageTemplate, NotificationCard, NoContent
   },
 
   data() {
@@ -70,16 +76,16 @@ export default {
     noNotificationsMessage() {
       switch (this.activeTab) {
         case "Freets":
-          return "No freet notifications";
+          return "When other users like or refreet any of your freets, you will see the notifications here.";
 
         case "Followers":
-          return "No follower notifications";
+          return "When other users start following you or send you follow requests, you will see the notifications here.";
 
         case "Following":
-          return "No following notifications";
+          return "If you have any pending follow requests that have been accepted, you will see them here.";
 
         default:
-          return "No notifications"
+          return "When other users engage with your freets or connect with you, you will see the notifications here.";
       }
     },
 
@@ -120,7 +126,8 @@ export default {
       const result = { 
         Freets: 0,
         Followers: 0,
-        Following: 0
+        Following: 0,
+        All: 0
       }
 
       this.followersNotifications.forEach(notification => {
@@ -275,6 +282,10 @@ export default {
 }
 
 .empty-message {
+  margin-top: 1.5rem;
+}
+
+.no-content-section {
   margin-top: 1.5rem;
 }
 </style>

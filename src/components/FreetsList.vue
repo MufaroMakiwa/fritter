@@ -6,11 +6,27 @@
       :freet="freet"/>
   </section>
 
-  <span v-else>There are no freets to display!</span>
+  <NoContent 
+    v-else
+    :title="emptyTitle"
+    :summary="emptySummary">
+
+    <button 
+      v-if="addLetsGoButton" 
+      class="no-content-button"
+      @click.stop="goToDiscover">
+      Let's go
+    </button>
+
+  </NoContent>
+
 </template>
 
 <script>
 import FreetCard from './FreetCard';
+import NoContent from './NoContent';
+import { eventBus } from '../main';
+
 
 export default {
   name: "FreetsList",
@@ -20,6 +36,20 @@ export default {
       default: () => [],
       type: Array,
     },
+
+    addLetsGoButton: {
+      default: false,
+      type: Boolean,
+    },
+
+    emptyTitle: String,
+    emptySummary: String,
+  },
+
+  methods: {
+    goToDiscover() {
+      eventBus.$emit("toggle-discover", "discover");
+    }
   },
 
   computed: {
@@ -29,7 +59,7 @@ export default {
   },
 
   components: {
-    FreetCard
+    FreetCard, NoContent
   }
 }
 </script>

@@ -5,8 +5,8 @@
     </div>
     
     <div class="home-navigator">
-      <h2 class="title">Feed</h2>
-      <div class="toggle-container">
+      <h3 class="section-title title">{{ pageTitle }}</h3>
+      <div class="toggle-container" v-if="isSignedIn">
 
         <span 
           :class="['home-toggle', activeTab === 'latest' ? 'active' : 'inactive']"
@@ -21,8 +21,28 @@
         </span>
       </div>
     </div>
-    <FreetsList :freets="freets" v-if="activeTab === 'latest'"/>
-    <FreetsList :freets="popularFreets" v-else/>
+    <div v-if="isSignedIn" class="freets-wrapper"> 
+      <FreetsList 
+        :freets="freets" 
+        v-if="activeTab === 'latest'"
+        :addLetsGoButton="true"
+        emptyTitle="Welcome to Fritter!"
+        emptySummary="This is the best place to see what's happening in the world. Find
+                      some people to follow to see their freets and refreets here."/>
+
+      <FreetsList 
+        :freets="popularFreets" 
+        v-else
+        emptyTitle="No freets to display, yet!"
+        emptySummary="This will help you discover users with the most trending content.
+                      You can connect with these users to see all their freets and refreets on your feed."/>
+    </div>
+
+    <FreetsList 
+      :freets="popularFreets" 
+      v-else
+      emptyTitle="No freets to display, yet!"
+      emptySummary="Here, you will see freets posted by other users according to their popularity."/>    
 
   </MainPageTemplate>
 </template>
@@ -59,6 +79,10 @@ export default {
 
     hasFreets() {
       return this.freets.length > 0;
+    },
+
+    pageTitle() {
+      return this.isSignedIn ? "Feed" : "Explore";
     }
   },
 
@@ -122,17 +146,25 @@ export default {
   },
 
   created() {
+    // if the route is discover, reload the page
+    if (window.location.pathname.includes("discover")) {
+      window.location.replace("/home");
+    }
+
     // get all the freets when created
+    console.log("Created");
     this.getFreets();
 
     // when a freet is modified, ping the db to get all freets in case
     // another user has posted a freet before the current user's post
     eventBus.$on('update-freets', this.freetModifiedListener);
+    eventBus.$on('toggle-discover', this.setActiveTab);
   },
   
   beforeDestroy() {
     // unregister all eventBus listeners
     eventBus.$off('update-freets', this.freetModifiedListener);
+    eventBus.$off('toggle-discover', this.setActiveTab);
   }
 }
 </script>
@@ -153,7 +185,7 @@ export default {
 }
 
 .home-navigator .title {
-  color: black;
+  margin-bottom: 0;
 }
 
 .toggle-container {
@@ -176,9 +208,6 @@ export default {
 }
 
 .home-toggle.active {
-  /* background-color: white;
-  border: 1px solid lightgray;
-  color: black; */
   background-color: gray;
   color: white;
   border: 1px solid gray;
@@ -197,6 +226,9 @@ export default {
 .home-toggle.inactive:hover {
   background-color: lightgray;
   color: black;
+}
+.freets-wrapper {
+  width: 100%;
 }
 
 </style>

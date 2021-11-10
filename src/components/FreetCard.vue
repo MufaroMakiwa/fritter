@@ -3,7 +3,7 @@
     <span v-if="isRefreet" class="refreet-label">
       <font-awesome-icon icon="retweet" class="icon"/>
 
-      <span @click="goToProfile(freet.refreetedBy)">
+      <span @click="goToProfile(freet.refreetDetails.refreetedBy)">
         {{ refreetLabel }} refreeted this {{ refreetTime }}
       </span>
     </span>

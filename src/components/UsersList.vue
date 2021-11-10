@@ -6,17 +6,33 @@
       :user="user"
       :displayRemoveButton="displayRemoveButton"/>
   </section>
-  <span v-else>{{ emptyMessage }}</span>
+
+  <NoContent 
+    v-else
+    :title="emptyTitle"
+    :summary="emptySummary">
+
+    <button 
+      v-if="displayNoContentDiscover" 
+      class="no-content-button"
+      @click.stop="goToDiscover">
+      Discover people to follow 
+    </button>
+
+  </NoContent>
 </template>
 
 <script>
 import UserCard from './UserCard';
+import NoContent from './NoContent';
+import { eventBus } from '../main';
+
 
 export default {
   name: "UsersList",
 
   components: {
-    UserCard
+    UserCard, NoContent
   },
 
   props: {
@@ -25,9 +41,15 @@ export default {
       type: Array
     },
 
-    emptyMessage: String,
+    emptyTitle: String,
+    emptySummary: String,
 
     displayRemoveButton: {
+      default: false,
+      type: Boolean,
+    },
+
+    displayNoContentDiscover: {
       default: false,
       type: Boolean,
     }
@@ -36,6 +58,12 @@ export default {
   computed: {
     hasUsers() {
       return this.users.length > 0;
+    }
+  },
+
+  methods: {
+    goToDiscover() {
+      eventBus.$emit("toggle-discover", "discover");
     }
   }
 }

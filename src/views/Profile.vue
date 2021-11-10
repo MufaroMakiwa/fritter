@@ -16,36 +16,46 @@
 
     <div v-if="isAuthorExists" class="profile-container">
       <div class="profile-details-section">
-        <h2 class="section-title">{{ sectionTitle }}</h2>
+        <h3 class="section-title">{{ sectionTitle }}</h3>
         <FreetsList 
           v-if="activeTab === 'freets'"
-          :freets="freets"/>
+          :freets="freets"
+          emptyTitle="No freets to display, yet!"
+          :emptySummary="emptyContentMessage"/>
 
         <FreetsList 
           v-if="activeTab === 'refreets'"
-          :freets="refreets"/>
+          :freets="refreets"
+          emptyTitle="No freets to display, yet!"
+          :emptySummary="emptyContentMessage"/>
 
         <FreetsList 
           v-if="activeTab === 'likes'"
-          :freets="likes"/>
+          :freets="likes"
+          emptyTitle="No freets to display, yet!"
+          :emptySummary="emptyContentMessage"/>
 
         <UsersList 
           v-if="activeTab === 'followers'"
           :users="followers"
           :displayRemoveButton="isCurrentUser"
-          emptyMessage="You do not have any followers!"/>
+          :emptyTitle="noUsersTitle"
+          :emptySummary="emptyContentMessage"/>
 
         <UsersList 
           v-if="activeTab === 'following'"
           :users="following"
-          emptyMessage="You are currently not following anyone!"/>    
+          :displayNoContentDiscover="isCurrentUser"
+          :emptyTitle="noUsersTitle"
+          :emptySummary="emptyContentMessage"/>    
       </div>   
     </div>
 
-    <div v-else class="not-exist">
-      <h2 class="section-title">This account does not exist!</h2>
-      <span>Try searching for another</span>
-    </div>
+    <NoContent 
+      v-else
+      title="This account doesn't exist!"
+      summary="Try searching for another." />
+
   </MainPageTemplate>
 </template>
 
@@ -54,6 +64,7 @@ import MainPageTemplate from '../components/MainPageTemplate';
 import ProfileHeader from '../components/ProfileHeader';
 import FreetsList from '../components/FreetsList';
 import UsersList from '../components/UsersList';
+import NoContent from '../components/NoContent';
 import { get } from '../utils/crud-helpers';
 import { eventBus } from '../main';
 
@@ -61,7 +72,7 @@ export default {
   name: "Profile",
 
   components: {
-    MainPageTemplate, FreetsList, ProfileHeader, UsersList
+    MainPageTemplate, FreetsList, ProfileHeader, UsersList, NoContent,
   },
 
   data() {
@@ -98,10 +109,61 @@ export default {
       return this.isSignedIn
       && this.isAuthorExists
       && this.author.username === this.user.username;
+    },
+
+    noUsersTitle() {
+      switch (this.activeTab) {
+        case "following":
+          return this.isCurrentUser
+                  ? "You are not following anyone, yet!"
+                  : `${this.author.username} is not following anyone, yet!`;
+
+        case "followers":
+          return this.isCurrentUser
+                  ? "You do not have any followers, yet!"
+                  : `${this.author.username} does not have any followers, yet!`;
+
+        default:
+          // should not get here
+          return ''
+      }
+    },
+
+    emptyContentMessage() {
+      switch (this.activeTab) {
+        case "refreets":
+          return this.isCurrentUser 
+                  ? "When you refreet other freets, you will see them here."
+                  : `When ${this.author.username} refreets other freets, you will see them here.`
+
+        case "likes":
+          return this.isCurrentUser 
+                  ? "When you like other freets, you will see them here."
+                  : `When ${this.author.username} likes other freets, you will see them here.`
+
+        case "followers":
+          return this.isCurrentUser 
+                  ? "When you do, you will see them listed here."
+                  : `When they do, you will see them listed here.`
+
+        case "following":
+          return this.isCurrentUser 
+                  ? "When you do, you see them listed here and also see their freets and refreets on your feed."
+                  : `When they do, you will see them listed here.`
+
+        default: 
+          return this.isCurrentUser
+                  ? "When you post freets, you will see them here."
+                  : `When ${this.author.username} posts freets, you will see them here.`
+      }
     }
   },
 
   methods: {
+    goToDiscover() {
+      this.$router.push({ name: "HomeDiscover" });
+    },
+
     getAuthorDetails() {
       const author = this.$route.params.author;
       get(`/api/user/${author}`)
@@ -207,6 +269,7 @@ export default {
 
     eventBus.$on('update-freets', this.freetModifiedListener);
     eventBus.$on('set-active-tab', this.setCurrentTab);
+    eventBus.$on('toggle-discover', this.goToDiscover);
 
     // when a user follows or unfollows someone, update the profile
     eventBus.$on('update-profile', this.getAuthorDetails);
@@ -217,6 +280,7 @@ export default {
     eventBus.$off('update-freets', this.freetModifiedListener);
     eventBus.$off('set-active-tab', this.setCurrentTab);
     eventBus.$off('update-profile', this.getAuthorDetails);
+    eventBus.$off('toggle-discover', this.goToDiscover);
   }
 }
 </script>
@@ -227,13 +291,6 @@ export default {
 }
 
 .profile-details-section  {
-  width: 100%;
-}
-
-.not-exist {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
 }
 
