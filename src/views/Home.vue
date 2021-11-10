@@ -152,7 +152,6 @@ export default {
     }
 
     // get all the freets when created
-    console.log("Created");
     this.getFreets();
 
     // when a freet is modified, ping the db to get all freets in case
