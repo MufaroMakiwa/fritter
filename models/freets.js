@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const helpers = require('./helpers');
-let data = [];
+const starter = require('./data/freets');
+let data = starter.map(a => {return {...a}});
 
 
 /**
@@ -90,7 +91,7 @@ class Freets {
   static updateOne(freetId, content) {
     const freet = Freets.findOne(freetId);
     freet.content = content;
-    freet.dateModified = new Date().toString();
+    freet.dateModified = new Date();
     return freet;
   }
 

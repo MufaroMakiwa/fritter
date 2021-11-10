@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const helpers = require('./helpers');
-let data = [];
-
+const starter = require('./data/user-relations');
+let data = starter.map(a => {return {...a}});
 
 /**
  * @typedef UserRelation

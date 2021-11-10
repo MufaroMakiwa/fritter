@@ -69,7 +69,7 @@ const getFollowSuggestions = (userId) => {
             }
           })
           .sort((a, b) => a.followers > b.followers ? -1 : 1)
-          .slice(0, 5);
+          .slice(0, 4);
 }
 
 

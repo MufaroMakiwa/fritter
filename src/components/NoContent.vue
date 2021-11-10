@@ -43,5 +43,6 @@ export default {
   height: 40px;
   padding: 0 1rem;
   border-radius: 20px;
+  outline: none
 }
 </style>

@@ -1,7 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
-
-let data = [];
-
+const starter = require('./data/users');
+let data = starter.map(a => {return {...a}});
 /**
  * @typedef User
  * @prop {string} username - user's password
