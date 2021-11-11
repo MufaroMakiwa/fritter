@@ -11,7 +11,7 @@ const data = [
     username: 'Emmanuel',
     password: '123456',
     dateJoined: new Date('2021-11-10T20:28:16.839Z'),
-    isPrivateAccount: false
+    isPrivateAccount: true
   },
   {
     userId: '574d89c5-4767-4175-9a3f-dddd28464467',
@@ -25,7 +25,7 @@ const data = [
     username: 'Elijah',
     password: '123456',
     dateJoined: new Date('2021-11-10T20:30:21.992Z'),
-    isPrivateAccount: false
+    isPrivateAccount: true
   },
   {
     userId: '62cc4fe2-18c5-41d9-8ed2-66586ce2b484',
