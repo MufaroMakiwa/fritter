@@ -93,14 +93,22 @@ export default {
       if (this.isPrivateAccount) {
         if (await this.$refs.confirm.open(
           "Turn off private mode?",
-          "By turning off private mode, all pending follow requests will be automatically accepted.",
+          "By turning off private mode, any pending follow requests you received will be automatically accepted.",
           "Turn off",
           { isWarning: false }
         )) {
           this.setPrivacy(false);
         }
       } else {
-        this.setPrivacy(true);
+
+        if (await this.$refs.confirm.open(
+          "Turn on private mode?",
+          "Your account will not be suggested to users who do not follow you and your freets will not show up on the Discover page.",
+          "Turn on",
+           { isWarning: false }
+        )) {
+          this.setPrivacy(true);
+        }
       }
     }
   }

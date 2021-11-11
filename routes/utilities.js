@@ -351,6 +351,7 @@ const getPopularFreets = (userId) => {
   }
 
   let excludeFreetIds;
+  const privateUserIds = users.filter(user => user.isPrivateAccount).map(user => user.userId);
 
   if (userId !== undefined) {
     // get freets from users being followed and pending
@@ -359,11 +360,13 @@ const getPopularFreets = (userId) => {
     const pendingRequestUserIds = userRelations.getAllRequestsSent(userId).map(relation => relation.userId);
 
     excludeFreetIds = freets
-                        .getAllFreetsByUsers(followingUserIds.concat(pendingRequestUserIds))
+                        .getAllFreetsByUsers(followingUserIds.concat(pendingRequestUserIds, privateUserIds))
                         .map(freet => freet.freetId);
 
   } else {
-    excludeFreetIds = [];
+    excludeFreetIds = freets
+                        .getAllFreetsByUsers(privateUserIds)
+                        .map(freet => freet.freetId);
   }
 
   return freets
