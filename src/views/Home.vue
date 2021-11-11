@@ -9,9 +9,9 @@
       <div class="toggle-container" v-if="isSignedIn">
 
         <span 
-          :class="['home-toggle', activeTab === 'latest' ? 'active' : 'inactive']"
-          @click="setActiveTab('latest')">
-          Latest
+          :class="['home-toggle', activeTab === 'feed' ? 'active' : 'inactive']"
+          @click="setActiveTab('feed')">
+          Feed
         </span>
 
         <span 
@@ -24,7 +24,7 @@
     <div v-if="isSignedIn" class="freets-wrapper"> 
       <FreetsList 
         :freets="freets" 
-        v-if="activeTab === 'latest'"
+        v-if="activeTab === 'feed'"
         :addLetsGoButton="true"
         emptyTitle="Welcome to Fritter!"
         emptySummary="This is the best place to see what's happening in the world. Find
@@ -68,7 +68,7 @@ export default {
       loading: true,
       freets: [],
       popularFreets: [],
-      activeTab: "latest"
+      activeTab: "feed"
     }
   },
 
@@ -82,7 +82,7 @@ export default {
     },
 
     pageTitle() {
-      return this.isSignedIn ? "Feed" : "Explore";
+      return this.isSignedIn ? "Highlights" : "Explore";
     }
   },
 
@@ -95,7 +95,7 @@ export default {
       const currentPath = window.location.pathname;
 
       // update the url
-      if (tab === "latest") {
+      if (tab === "feed") {
         if (!currentPath.includes("discover")) return;
         updatedRoute = currentPath.substring(0, currentPath.indexOf("discover") - 1);
 
@@ -141,7 +141,7 @@ export default {
     if (this.$route.path.includes("discover")) {
       this.setActiveTab("discover");
     } else {
-      this.setActiveTab("latest");
+      this.setActiveTab("feed");
     }
   },
 
