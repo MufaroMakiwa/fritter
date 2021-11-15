@@ -146,11 +146,6 @@ export default {
   },
 
   created() {
-    // if the route is discover, reload the page
-    if (window.location.pathname.includes("discover")) {
-      window.location.replace("/home");
-    }
-
     // get all the freets when created
     this.getFreets();
 

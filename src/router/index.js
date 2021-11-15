@@ -36,7 +36,7 @@ const router = new VueRouter({
     },
 
     {
-      path: '/home/latest', 
+      path: '/home/feed', 
       redirect: '/home',  
     },
 
