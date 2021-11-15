@@ -454,7 +454,7 @@ export default {
   left: -0.4rem;
   bottom: -0.4rem;
   z-index: 0;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   opacity: 0;
 }
 

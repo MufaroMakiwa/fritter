@@ -104,8 +104,8 @@ export default {
 }
 
 .suggestion-item:last-of-type {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
 }
 
 .suggestion-item .inner {

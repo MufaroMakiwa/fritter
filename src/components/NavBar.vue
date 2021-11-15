@@ -230,6 +230,7 @@ nav button {
   height: var(--element-size);
   border-radius: calc(var(--element-size) / 2);
   outline: none;
+  margin-left: 0.75rem;
 }
 
 .app-name {

@@ -147,7 +147,7 @@ export default {
   left: 0;
   right: 0;
   padding: 1rem;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   background-color: white;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.20);
   flex-direction: column;
@@ -205,7 +205,7 @@ export default {
   justify-content: flex-start;
   padding: 0.5rem;
   transition: all 0.3s;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   cursor: pointer;
 }
 

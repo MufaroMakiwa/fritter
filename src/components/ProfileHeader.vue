@@ -159,7 +159,8 @@ header {
   justify-content: center;
   align-items: center;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-  border-radius: 4px; 
+  overflow: hidden;
+  border-radius: var(--border-radius); 
 }
 
 header .profile-details {
@@ -225,6 +226,7 @@ header .profile-details {
   justify-content: space-around;
   background-color: white;
   width: 100%;
+  overflow: hidden;
 }
 
 .tab-navigator .tab {

@@ -67,6 +67,7 @@ html {
   --button-color-hover: #0199ad;
   --button-color-disabled: #a3b8bb;
   --background-color-selected: #dfecee;
+  --border-radius: 8px;
   --max-page-width: 1000px;
   --nav-bar-height: 70px;
   --page-padding: 2rem;
@@ -99,7 +100,7 @@ html, body {
   background-color: white;
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.15);
   border: 1px solid lightgray;
-  border-radius: 8px;
+  border-radius: var(--border-radius);
 }
 
 button {
