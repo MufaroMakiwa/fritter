@@ -33,7 +33,7 @@
               :class="['icon-container', 'like', !isSignedIn ? 'disabled' : '', isCurrentUserLiking ? 'liked' : '']"  
               @click="handleLike"
               :data-tooltip="isCurrentUserLiking ? 'Dislike' : 'Like'">
-              <font-awesome-icon icon="heart" class="icon"/>
+              <font-awesome-icon :icon="[isCurrentUserLiking ? 'fas' : 'far', 'heart']" class="icon"/>
               <span class="icon-summary" v-if="likes > 0">{{ likes }}</span>
             </div>
 

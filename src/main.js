@@ -4,14 +4,14 @@ import router from './router/index';
 import store from './store/index';
 
 // setup font awesome and icons used
-import { library } from '@fortawesome/fontawesome-svg-core'
+import { library } from '@fortawesome/fontawesome-svg-core';
 import { 
   faUserCircle, 
   faBell, 
   faCog, 
   faSignOutAlt, 
   faTrashAlt, 
-  faHeart, 
+  faHeart as sHeart, 
   faRetweet,
   faEdit,
   faTimes,
@@ -19,10 +19,11 @@ import {
   faSearch, 
   faUserLock,
   faUserFriends,
-  faUserPlus } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+  faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSmile, faHeart as rHeart } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, faHeart, faRetweet, faEdit, faTimes, faExclamationTriangle, faSearch, faUserLock, faUserPlus, faUserFriends)
+library.add(faUserCircle, faBell, faCog, faSignOutAlt, faTrashAlt, sHeart, rHeart, faRetweet, faEdit, faTimes, faExclamationTriangle, faSearch, faUserLock, faUserPlus, faSmile, faUserFriends)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 
@@ -39,3 +40,4 @@ new Vue({
   store,
   render: h => h(App)
 });
+
