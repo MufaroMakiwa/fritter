@@ -19,7 +19,7 @@
       v-model="password.value"
       :error="password.error"/>
       
-    <input type="submit" :value="title"/>
+    <button class="submit" type="submit">{{ title }}</button>
   </form>
 </template>
 
@@ -142,24 +142,26 @@ h2 {
   color: black;
 }
 
-input[type="submit"] {
+.form-input-margin {
+  margin-top: 1rem;
+}
+
+.submit {
   background-color: rgba(0, 0, 0, 0.05);
-  font-size: 100%;
   line-height: 200%;
   font-weight: bold;
   border: 1px solid lightgray;
   border-radius: 4px;
   margin-top: 1.5rem;
   padding: 8px;
+  color: black;
   transition: all 0.3s;
+  margin-left: 0;
 }
 
-input[type="submit"]:hover {
+.submit:hover {
   cursor: pointer;
   background-color: var(--input-color-hover);
 }
 
-.form-input-margin {
-  margin-top: 1rem;
-}
 </style>

@@ -16,6 +16,7 @@
       <section class="freet-details">
         <div class="freet-author-container">
           <span class="freet-author" @click="goToProfile(freet.author)">{{ freet.author }}</span>
+          <span class="dot" v-if="displayFollowButton">&#8226;</span>
           <FollowButton 
             v-if="displayFollowButton"
             followingStatus="NONE" 
@@ -394,6 +395,10 @@ export default {
 .freet-author:hover {
   text-decoration: underline;
   cursor: pointer;
+}
+
+.dot {
+  margin-left: 0.5rem;
 }
 
 .freet-timestamp {

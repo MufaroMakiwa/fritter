@@ -17,7 +17,7 @@
 
       <span class="section-note">
         By making your accout private, only your followers will be able to see your likes, refreets,
-        following and followers. You account will also not be suggested to other users. 
+        following and followers. 
       </span>
 
     </div>

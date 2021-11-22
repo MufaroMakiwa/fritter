@@ -9,7 +9,7 @@
         <span 
           class="update-link" 
           v-if="!username.updating"
-          @click="username.updating = true">
+          @click="toggleUpdateUsername">
           Update Username
         </span>
 
@@ -23,7 +23,7 @@
 
           <div class="modifiers">   
             <button @click="updateUsername" :disabled="!usernameUpdated">Update Username</button>        
-            <button @click="username.updating = false" class="cancel">Cancel</button>
+            <button @click="stopEditingUsername" class="cancel">Cancel</button>
           </div>
         </div>
 
@@ -37,7 +37,7 @@
         <span 
           class="update-link" 
           v-if="!password.updating"
-          @click="password.updating = true">
+          @click="toggleUpdatePassword">
           Update Password
         </span>
 
@@ -52,7 +52,7 @@
 
           <div class="modifiers">   
             <button @click="updatePassword" :disabled="!passwordUpdated">Update Password</button>        
-            <button @click="password.updating = false" class="cancel">Cancel</button>
+            <button @click="stopEditingPassword" class="cancel">Cancel</button>
           </div>
         </div>
       </div>
@@ -106,6 +106,23 @@ export default {
 
 
   methods: {
+    toggleUpdateUsername() {
+      this.username.updating = true;
+      this.password.updating && this.stopEditingPassword();
+    },
+
+    stopEditingUsername() {
+      this.username = { value: "", error: "", updating: false };
+    },
+
+    toggleUpdatePassword() {
+      this.password.updating = true;
+      this.username.updating && this.stopEditingUsername();
+    },
+
+    stopEditingPassword() {
+      this.password = { value: "", error: "", updating: false };
+    },
 
     // this will be true if any of the inputs has an error set on it
     hasValidationError(field) {
